@@ -10,6 +10,7 @@ namespace Clusterizer
     {
         static void Main(string[] args)
         {
+            //Test
         }
     }
 }
