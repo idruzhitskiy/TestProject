@@ -45,6 +45,9 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+	<Compile Include="Clusterizer\IClusterizer.cs" />
+	<Compile Include="DistanceFunction\IDistanceFunction.cs" />
+	<Compile Include="Entities\Entity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
