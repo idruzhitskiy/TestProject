@@ -9,7 +9,7 @@ namespace Clusterizer.Entities
     /// <summary>
     /// Кластеризуемая сущность
     /// </summary>
-    class Entity
+    public class Entity
     {
         private List<List<string>> textAttributes;
 
