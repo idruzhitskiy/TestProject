@@ -10,7 +10,7 @@ namespace Clusterizer.DistanceFunction
     /// <summary>
     /// Функция расстояния
     /// </summary>
-    interface IDistanceFunction
+    public interface IDistanceFunction
     {
         /// <summary>
         /// Функция расстояния. 
