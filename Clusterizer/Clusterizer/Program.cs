@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Clusterizer.DistanceFunction;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,11 @@ namespace Clusterizer
     {
         static void Main(string[] args)
         {
-            //Test
+            NpmiDistanceFunction f = new NpmiDistanceFunction(new List<List<string>>{
+                new List<string> {"Иван", "родил", "девченку" },
+                new List<string> {"Велит", "тащить", "пеленку" },
+                new List<string> {"родил", "девченку" }
+            });
         }
     }
 }
