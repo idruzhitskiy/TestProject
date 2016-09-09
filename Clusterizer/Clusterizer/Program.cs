@@ -11,11 +11,7 @@ namespace Clusterizer
     {
         static void Main(string[] args)
         {
-            NpmiDistanceFunction f = new NpmiDistanceFunction(new List<List<string>>{
-                new List<string> {"Иван", "родил", "девченку" },
-                new List<string> {"Велит", "тащить", "пеленку" },
-                new List<string> {"родил", "девченку" }
-            });
+
         }
     }
 }

@@ -7,12 +7,15 @@ using Clusterizer.Entities;
 
 namespace Clusterizer.DistanceFunction
 {
-    public class NpmiDistanceFunction : IDistanceFunction
+    /// <summary>
+    /// Реализация IDistanceFunction. Использует вероятностную модель
+    /// </summary>
+    public class DistanceFunction : IDistanceFunction
     {
         private Dictionary<Tuple<string, string>, double> wordCounts = new Dictionary<Tuple<string, string>, double>();
         private double allWordsCount;
 
-        public NpmiDistanceFunction(IEnumerable<List<string>> attributes)
+        public DistanceFunction(IEnumerable<List<string>> attributes)
         {
             foreach (var attribute in attributes)
             {
@@ -45,6 +48,8 @@ namespace Clusterizer.DistanceFunction
                     }
                 }
                 result /= entity1.TextAttributes.Count;
+                if (double.IsInfinity(result))
+                    result = -1;
             }
             return result;
         }
@@ -57,21 +62,12 @@ namespace Clusterizer.DistanceFunction
             wordCounts[key]++;
         }
 
-        private double SequenceProbability(List<string> sequence)
+        private double SequenceProbability(List<string> sequence, string prevWord = null)
         {
             double result = 1.0;
-            string prevWord = null;
             for (int i = 0; i < sequence.Count; i++)
             {
-                if (wordCounts.Keys.Contains(new Tuple<string, string>(prevWord, sequence[i])))
-                {
-                    result *= (wordCounts[new Tuple<string, string>(prevWord, sequence[i])] /
-                        ((prevWord == null) ? allWordsCount : wordCounts[new Tuple<string, string>(null, sequence[i])]));
-                }
-                else
-                {
-                    result *= (wordCounts[new Tuple<string, string>(null, sequence[i])] / allWordsCount);
-                }
+                result *= TwoWordsProbabilty(prevWord, sequence[i]);
                 prevWord = sequence[i];
             }
             return result;
@@ -86,16 +82,39 @@ namespace Clusterizer.DistanceFunction
             {
                 if (seq1[i] == seq2[i])
                 {
-                    result *= (wordCounts[new Tuple<string, string>(prevWord, seq1[i])] /
-                        ((prevWord == null) ? allWordsCount : wordCounts[new Tuple<string, string>(null, seq1[i])]));
+                    result *= TwoWordsProbabilty(prevWord, seq1[i]);
                 }
                 else
                 {
-                    result *= (wordCounts[new Tuple<string, string>(null, seq1[i])] / allWordsCount)
-                        * (wordCounts[new Tuple<string, string>(null, seq2[i])] / allWordsCount);
+                    result *= SingleWordProbability(seq1[i]) * SingleWordProbability(seq2[i]);
                 }
                 prevWord = seq1[i];
             }
+            result *= SequenceProbability(seq1.Skip(length).ToList(), seq1[length-1]);
+            result *= SequenceProbability(seq2.Skip(length).ToList(), seq2[length-1]);
+            return result;
+        }
+
+        private double TwoWordsProbabilty(string prevWord, string word)
+        {
+            double result = 0;
+            if (wordCounts.Keys.Contains(new Tuple<string, string>(prevWord, word)))
+            {
+                result = (wordCounts[new Tuple<string, string>(prevWord, word)] /
+                    ((prevWord == null) ? allWordsCount : wordCounts[new Tuple<string, string>(null, word)]));
+            }
+            else
+            {
+                result = SingleWordProbability(word);
+            }
+            return result;
+        }
+
+        private double SingleWordProbability(string word)
+        {
+            double result = 0;
+            if (wordCounts.Keys.Contains(new Tuple<string, string>(null, word)))
+                result = wordCounts[new Tuple<string, string>(null, word)] / allWordsCount;
             return result;
         }
     }
