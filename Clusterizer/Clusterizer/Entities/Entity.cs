@@ -11,11 +11,11 @@ namespace Clusterizer.Entities
     /// </summary>
     class Entity
     {
-        private List<string> textAttributes;
+        private List<List<string>> textAttributes;
 
-        public Entity(IEnumerable<string> textAttributes)
+        public Entity(IEnumerable<IEnumerable<string>> textAttributes)
         {
-            this.textAttributes = new List<string>(textAttributes);
+            this.textAttributes = new List<List<string>>(textAttributes.Select(e => new List<string>(e)));
         }
 
         public List<string> TextAttributes { get; }
