@@ -18,6 +18,11 @@ namespace Clusterizer.Entities
             this.textAttributes = new List<List<string>>(textAttributes.Select(e => new List<string>(e)));
         }
 
-        public List<string> TextAttributes { get; }
+        public List<List<string>> TextAttributes {
+            get
+            {
+                return textAttributes;
+            }
+        }
     }
 }
