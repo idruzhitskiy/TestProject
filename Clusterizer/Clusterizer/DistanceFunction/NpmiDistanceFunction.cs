@@ -29,19 +29,19 @@ namespace Clusterizer.DistanceFunction
 
         public double Distance(Entity entity1, Entity entity2)
         {
-            double result = -1.0;
+            double result = 0;
             if (entity1.TextAttributes.Count == entity2.TextAttributes.Count)
             {
                 result = 0;
                 for (int i = 0; i < entity1.TextAttributes.Count; i++)
                 {
-                    var p12 = SequenceProbability(entity1.TextAttributes[i].Union(entity2.TextAttributes[i]).Distinct().ToList());
+                    var p12 = CombinedSequenceProbability(entity1.TextAttributes[i], entity2.TextAttributes[i]);
                     if (p12 != 0)
                     {
                         double p1 = SequenceProbability(entity1.TextAttributes[i]);
                         double p2 = SequenceProbability(entity2.TextAttributes[i]);
-                        double npmi = Math.Log(p12 / p1 * p2) / Math.Log(p12);
-                        result += npmi;
+                        double npmi = Math.Log(p12 / (p1 * p2)) / Math.Log(p12);
+                        result += ((-npmi + 1)/2);
                     }
                 }
                 result /= entity1.TextAttributes.Count;
@@ -70,17 +70,32 @@ namespace Clusterizer.DistanceFunction
                 }
                 else
                 {
-                    result = 0;
-                    break;
+                    result *= (wordCounts[new Tuple<string, string>(null, sequence[i])] / allWordsCount);
                 }
                 prevWord = sequence[i];
             }
             return result;
         }
 
-        private List<string> CombineSequences (List<string> seq1, List<string> seq2)
+        private double CombinedSequenceProbability(List<string> seq1, List<string> seq2)
         {
-            var result = new List<string>();
+            double result = 1.0;
+            var length = Math.Min(seq1.Count, seq2.Count);
+            string prevWord = null;
+            for (int i = 0; i < length; i++)
+            {
+                if (seq1[i] == seq2[i])
+                {
+                    result *= (wordCounts[new Tuple<string, string>(prevWord, seq1[i])] /
+                        ((prevWord == null) ? allWordsCount : wordCounts[new Tuple<string, string>(null, seq1[i])]));
+                }
+                else
+                {
+                    result *= (wordCounts[new Tuple<string, string>(null, seq1[i])] / allWordsCount)
+                        * (wordCounts[new Tuple<string, string>(null, seq2[i])] / allWordsCount);
+                }
+                prevWord = seq1[i];
+            }
             return result;
         }
     }

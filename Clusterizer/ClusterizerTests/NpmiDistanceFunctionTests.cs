@@ -35,19 +35,30 @@ namespace ClusterizerTests
         [TestMethod]
         public void DistanceTest()
         {
+            // arrange
             Entity entity1 = new Entity(new List<List<string>>
             {
-                new List<string> {"кот"},
-                new List<string> {"рыжее", "тело" },
+                new List<string> {"кот", "с", "черными", "ушами"}
             });
             Entity entity2 = new Entity(new List<List<string>>
             {
-                new List<string> {"собака"},
-                new List<string> {"черное", "тело" },
+                new List<string> {"собака", "с", "черными", "ушами"}
             });
-            var function = new NpmiDistanceFunction(entity1.TextAttributes.Union(entity2.TextAttributes.Union(new List<List<string>> { new List<string> { "кот", "собака" } })));
-            var result = function.Distance(entity1, entity2);
-            Assert.IsTrue(result > 0 && result < 1);
+            Entity entity3 = new Entity(new List<List<string>>
+            {
+                new List<string> {"собака", "с", "рыжим", "хвостом"}
+            });
+            var function = new NpmiDistanceFunction(entity1.TextAttributes.Union(entity2.TextAttributes).Union(entity3.TextAttributes));
+            var resultIdentical = function.Distance(entity1, entity1);
+            var resultAboveMiddle = function.Distance(entity1, entity2);
+            var resultBelowMiddle = function.Distance(entity1, entity3);
+
+            // act
+
+            // assert
+            Assert.IsTrue(resultIdentical == 1);
+            Assert.IsTrue(resultAboveMiddle > 0.5 && resultAboveMiddle < 1);
+            Assert.IsTrue(resultBelowMiddle > 0 && resultBelowMiddle < 0.5);
         }
     }
 }
