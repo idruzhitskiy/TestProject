@@ -1,4 +1,5 @@
-﻿using Ninject.Modules;
+﻿using Clusterizer.DistanceFunctions;
+using Ninject.Modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Clusterizer
         {
             // Сюда добавлять реализации абстрактных классов, например
             // Bind<Interface>().To<Realisation>()
+            Bind<IDistanceFunction>().To<DistanceFunction>();
         }
     }
 }

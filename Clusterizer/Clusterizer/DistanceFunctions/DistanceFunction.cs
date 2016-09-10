@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Clusterizer.Entities;
-using Clusterizer.EntitiesReader;
+using Clusterizer.EntitiesReaders;
 
-namespace Clusterizer.DistanceFunction
+namespace Clusterizer.DistanceFunctions
 {
     /// <summary>
     /// Реализация IDistanceFunction с использованием Евклидова расстояния

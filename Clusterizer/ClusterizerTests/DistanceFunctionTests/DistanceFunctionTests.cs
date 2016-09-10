@@ -1,5 +1,5 @@
-﻿using Clusterizer.DistanceFunction;
-using Clusterizer.EntitiesReader;
+﻿using Clusterizer.DistanceFunctions;
+using Clusterizer.EntitiesReaders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Ninject;

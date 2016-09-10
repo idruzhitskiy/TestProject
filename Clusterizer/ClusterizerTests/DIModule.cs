@@ -1,4 +1,4 @@
-﻿using Clusterizer.DistanceFunction;
+﻿using Clusterizer.DistanceFunctions;
 using Ninject.Modules;
 using System;
 using System.Collections.Generic;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Clusterizer.DistanceFunction
+namespace Clusterizer.DistanceFunctions
 {
     /// <summary>
     /// Функция расстояния
