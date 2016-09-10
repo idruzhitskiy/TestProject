@@ -24,17 +24,15 @@ namespace ClusterizerTests
         }
 
         [TestMethod]
-        public void MinMaxDistanceTest ()
+        public void MinMaxDistanceTest()
         {
             // arrange
-            var readerMock = new Mock<IEntitiesReader>();
-            readerMock.Setup(r => r.Entities).Returns(new List<IEntity>
+            var entities = new List<IEntity>
             {
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","2","3"} }),
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "4","5","6"} })
-            });
-            var reader = readerMock.Object;
-            kernel.Rebind<IEntitiesReader>().ToConstant(reader);
+                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","1","2","3"} }),
+                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "4","4","5","6"} })
+            };
+            var reader = InitializeReader(entities);
             var distanceFunction = kernel.Get<IDistanceFunction>();
 
             // act
@@ -44,6 +42,35 @@ namespace ClusterizerTests
             // assert
             Assert.IsTrue(maxDistance == 1);
             Assert.IsTrue(minDistance == 0);
+        }
+
+        [TestMethod]
+        public void TestDifferentDistances()
+        {
+            // arrange
+            var entities = new List<IEntity>
+            {
+                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","1","1","1"} }),
+                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","1","1","2"} }),
+                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","1","2","3"} }),
+                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","2","3","4"} })
+            };
+            var reader = InitializeReader(entities);
+            var distanceFunction = kernel.Get<IDistanceFunction>();
+
+            // act
+            var oneQuarterDiff = distanceFunction.Distance(reader.Entities[0], reader.Entities[1]);
+            var twoQuartersDiff = distanceFunction.Distance(reader.Entities[0], reader.Entities[2]);
+            var threeQuartersDiff = distanceFunction.Distance(reader.Entities[0], reader.Entities[3]);
+        }
+
+        private IEntitiesReader InitializeReader(List<IEntity> entities)
+        {
+            var readerMock = new Mock<IEntitiesReader>();
+            readerMock.Setup(r => r.Entities).Returns(entities);
+            var reader = readerMock.Object;
+            kernel.Rebind<IEntitiesReader>().ToConstant(reader);
+            return reader;
         }
     }
 }

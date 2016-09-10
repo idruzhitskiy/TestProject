@@ -38,30 +38,44 @@ namespace Clusterizer.DistanceFunction
             double result = 0;
             for (int i = 0; i < entity1.TextAttributes.Count; i++)
             {
-                List<int> vector1 = FillWordCountVector(entity1.TextAttributes[i]);
-                List<int> vector2 = FillWordCountVector(entity2.TextAttributes[i]);
-                result += EuclidDistance(vector1, vector2);
+                var vector1 = FillWordCountVector(entity1.TextAttributes[i]);
+                var vector2 = FillWordCountVector(entity2.TextAttributes[i]);
+                result += DistanceBetweenVectors(vector1, vector2);
             }
             result /= entity1.TextAttributes.Count;
             return result;
         }
 
-        private double EuclidDistance(List<int> vector1, List<int> vector2)
+        private double DistanceBetweenVectors(List<double> vector1, List<double> vector2)
         {
-            if (vector1.Count != vector2.Count)
-                throw new ArgumentException("У векторов различные длины");
-
-            double sum = 0;
-            for (int i=0; i<vector1.Count; i++)
+            List<double> resultVector = new List<double>();
+            for (int i = 0; i < vector1.Count; i++)
             {
-                sum += Math.Abs(vector1[i] - vector2[i]) * Math.Abs(vector1[i] - vector2[i]);
+                resultVector.Add(Math.Abs(vector1[i] - vector2[i]));
+            }
+            return EuclidDistance(resultVector) / Math.Sqrt(vector1.Count * 2);
+        }
+
+        private double EuclidDistance(List<double> vector)
+        {
+            double sum = 0;
+            foreach (var num in vector)
+            {
+                sum += (num * num);
             }
             return Math.Sqrt(sum);
         }
 
-        private List<int> FillWordCountVector(List<string> list)
+        private List<double> NormalizeVector(List<double> vector)
         {
-            List<int> result = new List<int>();
+            var length = EuclidDistance(vector);
+            double invLength = (length > 0) ? (1.0 / length) : 0;
+            return vector.Select(num => num * invLength).ToList();
+        }
+
+        private List<double> FillWordCountVector(List<string> list)
+        {
+            List<double> result = new List<double>();
             foreach (var word in words)
             {
                 if (list.Contains(word))
