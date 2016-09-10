@@ -8,6 +8,9 @@ using Clusterizer.EntitiesReader;
 
 namespace Clusterizer.DistanceFunction
 {
+    /// <summary>
+    /// Реализация IDistanceFunction с использованием Евклидова расстояния
+    /// </summary>
     public class DistanceFunction : IDistanceFunction
     {
         private readonly IEntitiesReader reader;
@@ -30,6 +33,12 @@ namespace Clusterizer.DistanceFunction
             }
         }
 
+        /// <summary>
+        /// Функция расстояния
+        /// </summary>
+        /// <param name="entity1">Сущность</param>
+        /// <param name="entity2">Сущность</param>
+        /// <returns>{0;1}</returns>
         public double Distance(IEntity entity1, IEntity entity2)
         {
             if (entity1.TextAttributes.Count != entity2.TextAttributes.Count)
