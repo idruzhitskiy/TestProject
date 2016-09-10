@@ -54,6 +54,7 @@
     <Compile Include="DistanceFunction\IDistanceFunction.cs" />
     <Compile Include="Entities\IEntity.cs" />
 	<Compile Include="EntitiesReader\IEntitiesReader.cs" />
+	<Compile Include="DistanceFunction\DistanceFunction.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

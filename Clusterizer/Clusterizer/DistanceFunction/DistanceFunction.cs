@@ -11,6 +11,7 @@ namespace Clusterizer.DistanceFunction
     {
         public double Distance(IEntity entity1, IEntity entity2)
         {
+            throw new NotImplementedException();
         }
     }
 }
