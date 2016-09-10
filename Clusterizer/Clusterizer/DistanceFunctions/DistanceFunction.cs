@@ -13,12 +13,10 @@ namespace Clusterizer.DistanceFunctions
     /// </summary>
     public class DistanceFunction : IDistanceFunction
     {
-        private readonly IEntitiesReader reader;
         private List<string> words;
 
         public DistanceFunction(IEntitiesReader reader)
         {
-            this.reader = reader;
             words = new List<string>();
             foreach (var attrsList in reader.Entities.Select(e => e.TextAttributes))
             {
