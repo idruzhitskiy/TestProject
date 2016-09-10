@@ -29,8 +29,8 @@ namespace ClusterizerTests
             // arrange
             var entities = new List<IEntity>
             {
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","1","2","3"} }),
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "4","4","5","6"} })
+                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","1","1","1"} }),
+                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "2","2","2","2"} })
             };
             var reader = InitializeReader(entities);
             var distanceFunction = kernel.Get<IDistanceFunction>();
@@ -50,9 +50,10 @@ namespace ClusterizerTests
             // arrange
             var entities = new List<IEntity>
             {
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","1","1","1"} }),
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","1","1","2"} }),
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","1","2","3"} }),
+                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "0","0","0","0"} }),
+                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "0","0","0","2"} }),
+                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "0","0","2","3"} }),
+                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "0","2","3","4"} }),
                 Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","2","3","4"} })
             };
             var reader = InitializeReader(entities);
@@ -62,6 +63,12 @@ namespace ClusterizerTests
             var oneQuarterDiff = distanceFunction.Distance(reader.Entities[0], reader.Entities[1]);
             var twoQuartersDiff = distanceFunction.Distance(reader.Entities[0], reader.Entities[2]);
             var threeQuartersDiff = distanceFunction.Distance(reader.Entities[0], reader.Entities[3]);
+            var fullDiff = distanceFunction.Distance(reader.Entities[0], reader.Entities[4]);
+
+            // assert
+            Assert.IsTrue(oneQuarterDiff < twoQuartersDiff);
+            Assert.IsTrue(twoQuartersDiff < threeQuartersDiff);
+            Assert.IsTrue(threeQuartersDiff < fullDiff);
         }
 
         private IEntitiesReader InitializeReader(List<IEntity> entities)

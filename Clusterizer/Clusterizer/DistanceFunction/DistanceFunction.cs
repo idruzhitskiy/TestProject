@@ -49,11 +49,12 @@ namespace Clusterizer.DistanceFunction
         private double DistanceBetweenVectors(List<double> vector1, List<double> vector2)
         {
             List<double> resultVector = new List<double>();
-            for (int i = 0; i < vector1.Count; i++)
+            var length = vector1.Count;
+            for (int i = 0; i < length; i++)
             {
                 resultVector.Add(Math.Abs(vector1[i] - vector2[i]));
             }
-            return EuclidDistance(resultVector) / Math.Sqrt(vector1.Count * 2);
+            return EuclidDistance(resultVector) / (2 * Math.Sqrt(length * length * 2));
         }
 
         private double EuclidDistance(List<double> vector)
