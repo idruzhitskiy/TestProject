@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Ninject;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,7 +12,9 @@ namespace Clusterizer
     {
         static void Main(string[] args)
         {
-            //Test
+            // Инициализация DI
+            IKernel kernel = new StandardKernel();
+            kernel.Load(Assembly.GetExecutingAssembly());
         }
     }
 }

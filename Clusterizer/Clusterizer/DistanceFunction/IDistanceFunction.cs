@@ -20,6 +20,6 @@ namespace Clusterizer.DistanceFunction
         /// <param name="entity1">Сущность</param>
         /// <param name="entity2">Сущность</param>
         /// <returns>{-1} u [0;1]</returns>
-        double Distance(Entity entity1, Entity entity2);
+        double Distance(IEntity entity1, IEntity entity2);
     }
 }
