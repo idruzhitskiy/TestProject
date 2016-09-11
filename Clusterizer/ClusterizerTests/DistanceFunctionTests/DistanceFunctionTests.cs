@@ -79,7 +79,7 @@ namespace ClusterizerTests
             var entities = new List<IEntity>
             {
                 Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "0","0","0","0"} }),
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","1","1","1"} })
+                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","1","2","2"} })
             };
             var reader = InitializeReader(entities);
             var distanceFunction = kernel.Get<IDistanceFunction>();
@@ -93,7 +93,6 @@ namespace ClusterizerTests
             // assert
             Assert.IsTrue(distanceCentroidToFirst < distanceBetween);
             Assert.IsTrue(distanceCentroidToSecond < distanceBetween);
-            Assert.IsTrue(distanceCentroidToSecond == distanceCentroidToFirst);
         }
 
         private IEntitiesReader InitializeReader(List<IEntity> entities)
