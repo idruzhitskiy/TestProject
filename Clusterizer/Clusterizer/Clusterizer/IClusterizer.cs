@@ -16,9 +16,9 @@ namespace Clusterizer.Clusterizer
         /// <summary>
         /// Функция кластеризации
         /// </summary>
-        /// <param name="distanceFunction">Функция расстояния</param>
+        /// <param name="entities">Список сущностей</param>
         /// <param name="numOfClusters">Количество кластеров</param>
         /// <returns>Список, содержащий кластеры</returns>
-        List<List<Entity>> Clusterize(IDistanceFunction distanceFunction, int numOfClusters);
+        List<List<IEntity>> Clusterize(List<IEntity> entities, int numOfClusters);
     }
 }
