@@ -97,5 +97,10 @@ namespace Clusterizer.DistanceFunctions
             }
             return result;
         }
+
+        public IEntity Centroid(List<IEntity> entities)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

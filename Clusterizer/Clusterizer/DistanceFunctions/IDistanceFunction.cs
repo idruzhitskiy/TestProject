@@ -21,5 +21,12 @@ namespace Clusterizer.DistanceFunctions
         /// <param name="entity2">Сущность</param>
         /// <returns>{-1} u [0;1]</returns>
         double Distance(IEntity entity1, IEntity entity2);
+
+        /// <summary>
+        /// Поиск центроиды
+        /// </summary>
+        /// <param name="entities">Сущности</param>
+        /// <returns>Центральная сущность</returns>
+        IEntity Centroid(List<IEntity> entities);
     }
 }
