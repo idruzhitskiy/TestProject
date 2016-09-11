@@ -1,23 +1,23 @@
 ﻿using Clusterizer.Entities;
-using Clusterizer.DistanceFunction;
+using Clusterizer.DistanceFunctions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Clusterizer.Clusterizer
+namespace Clusterizer.Clusterizers
 {
     class Clusterizer
     {
-        private double GetCentroid(List<Entity> entities)
+        private double GetCentroid(List<IEntity> entities)
         {
             if (entities.Count == 0)
                 throw new Exception("Entities is empty!");
 
-           List<Entity> mean = new List<Entity>();
+            List<IEntity> mean = new List<IEntity>();
 
-            foreach(Entity value in entities)
+            foreach (IEntity value in entities)
             {
 
             }
@@ -26,17 +26,17 @@ namespace Clusterizer.Clusterizer
             return 0;
         }
 
-        private bool UpdateMeans(List<Entity> entities, List<List<Entity>> clustering, List<Entity> means)
+        private bool UpdateMeans(List<IEntity> entities, List<List<IEntity>> clustering, List<IEntity> means)
         {
             return true;
         }
 
-        private bool UpdateClustering(List<Entity> entities, List<List<Entity>> clustering, List<Entity> means)
+        private bool UpdateClustering(List<IEntity> entities, List<List<IEntity>> clustering, List<IEntity> means)
         {
             return true;
         }
 
-        public List<List<Entity>> Cluster(List<Entity> entities, int numberOfClusters)
+        public List<List<IEntity>> Cluster(List<IEntity> entities, int numberOfClusters)
         {
             if (numberOfClusters <= 0)
                 throw new Exception("Number of clusters is negative or equal zero!");
@@ -44,8 +44,8 @@ namespace Clusterizer.Clusterizer
             bool changed = true;
             bool success = true;
 
-            List<List<Entity>> clustering = new List<List<Entity>>(numberOfClusters);
-            List<Entity> means = new List<Entity>(numberOfClusters);
+            List<List<IEntity>> clustering = new List<List<IEntity>>(numberOfClusters);
+            List<IEntity> means = new List<IEntity>(numberOfClusters);
 
             int count = 10 * entities.Count;
             int currEntity = 0;
@@ -58,6 +58,6 @@ namespace Clusterizer.Clusterizer
             }
 
             return clustering;
-        } 
+        }
     }
 }
