@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Clusterizer.EntitiesReader
+namespace Clusterizer.EntitiesReaders
 {
     /// <summary>
     /// Интерфейс получения сущностей
