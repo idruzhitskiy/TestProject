@@ -53,6 +53,28 @@ namespace Clusterizer.DistanceFunctions
             return result;
         }
 
+        /// <summary>
+        /// Поиск центроиды
+        /// </summary>
+        /// <param name="entities">Сущности</param>
+        /// <returns>Центральная сущность</returns>
+        public IEntity Centroid(List<IEntity> entities)
+        {
+            if (entities.Select(e => e.TextAttributes.Count).Distinct().Count() > 0)
+                throw new ArgumentException("У сущностей разное количество атрибутов");
+
+            List<List<string>> resultAttributes = new List<List<string>>();
+            for (int i = 0; i < entities[0].TextAttributes.Count; i++)
+            {
+                resultAttributes.Add(
+                    entities
+                    .Select(e => e.TextAttributes[i])
+                    .SelectMany(l => l)
+                    .ToList());
+            }
+            return null;
+        }
+
         private double DistanceBetweenVectors(List<double> vector1, List<double> vector2)
         {
             List<double> resultVector = new List<double>();
@@ -96,11 +118,6 @@ namespace Clusterizer.DistanceFunctions
                 }
             }
             return result;
-        }
-
-        public IEntity Centroid(List<IEntity> entities)
-        {
-            throw new NotImplementedException();
         }
     }
 }
