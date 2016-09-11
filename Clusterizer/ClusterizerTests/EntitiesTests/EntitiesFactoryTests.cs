@@ -16,7 +16,7 @@ namespace ClusterizerTests.EntitiesTests
         public void TestFactory()
         {
             // arrange
-            var attributes = new[] { new[] { "Test", "attribute" } };
+            var attributes = new List<List<string>> { new List<string> { "Test", "attribute" } };
             var factory = kernel.Get<IEntitiesFactory>();
 
             // act

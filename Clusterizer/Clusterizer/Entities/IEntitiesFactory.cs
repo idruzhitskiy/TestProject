@@ -14,8 +14,8 @@ namespace Clusterizer.Entities
         /// <summary>
         /// Создать сущность с указанными текстовыми атрибутами
         /// </summary>
-        /// <param name="attrubutes">Атрибуты</param>
+        /// <param name="attributes">Атрибуты</param>
         /// <returns>Сущность</returns>
-        IEntity CreateEntity(IEnumerable<IEnumerable<string>> attributes);
+        IEntity CreateEntity(List<List<string>> attributes);
     }
 }
