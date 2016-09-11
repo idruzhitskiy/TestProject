@@ -47,11 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DIModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Clusterizer\IClusterizer.cs" />
-    <Compile Include="DistanceFunction\IDistanceFunction.cs" />
+	<Compile Include="Clusterizer\IClusterizer.cs" />
+	<Compile Include="DistanceFunction\IDistanceFunction.cs" />
     <Compile Include="Entities\IEntity.cs" />
 	<Compile Include="EntitiesReader\IEntitiesReader.cs" />
   </ItemGroup>
