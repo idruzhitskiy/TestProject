@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Clusterizer
 {
-    class DIModule : NinjectModule
+    public class DIModule : NinjectModule
     {
         public override void Load()
         {
