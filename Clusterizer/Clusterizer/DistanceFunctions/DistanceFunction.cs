@@ -53,6 +53,16 @@ namespace Clusterizer.DistanceFunctions
             return result;
         }
 
+        /// <summary>
+        /// Функция нахождения центра кластера
+        /// </summary>
+        /// <param name="entities">Сущности</param>
+        /// <returns>Сущность, являющаяся центром кластера</returns>
+        public IEntity Centroid(List<IEntity> entities)
+        {
+            throw new NotImplementedException();
+        }
+
         private double DistanceBetweenVectors(List<double> vector1, List<double> vector2)
         {
             List<double> resultVector = new List<double>();
