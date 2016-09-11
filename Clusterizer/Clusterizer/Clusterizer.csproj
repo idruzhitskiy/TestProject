@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="CentroidFinders\ICentroidFinder.cs" />
     <Compile Include="DIModule.cs" />
+    <Compile Include="Entities\IEntitiesFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Clusterizers\IClusterizer.cs" />

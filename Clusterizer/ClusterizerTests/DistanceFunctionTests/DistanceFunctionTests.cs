@@ -15,16 +15,8 @@ using Clusterizer;
 namespace ClusterizerTests
 {
     [TestClass]
-    public class DistanceFunctionTests
+    public class DistanceFunctionTests : BaseTest
     {
-        private IKernel kernel;
-
-        [TestInitialize]
-        public void Initialize()
-        {
-            kernel = new StandardKernel(new DIModule());
-        }
-
         [TestMethod]
         public void MinMaxDistanceTest()
         {
