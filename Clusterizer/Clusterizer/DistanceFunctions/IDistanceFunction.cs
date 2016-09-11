@@ -21,5 +21,12 @@ namespace Clusterizer.DistanceFunctions
         /// <param name="entity2">Сущность</param>
         /// <returns>{-1} u [0;1]</returns>
         double Distance(IEntity entity1, IEntity entity2);
+
+        /// <summary>
+        /// Функция нахождения центра кластера
+        /// </summary>
+        /// <param name="entities">Сущности</param>
+        /// <returns>Сущность, являющаяся центром кластера</returns>
+        IEntity Centroid(List<IEntity> entities);
     }
 }
