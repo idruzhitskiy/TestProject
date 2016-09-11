@@ -1,4 +1,4 @@
-﻿using Clusterizer.DistanceFunction;
+﻿using Clusterizer.DistanceFunctions;
 using Clusterizer.Entities;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Clusterizer.Clusterizer
+namespace Clusterizer.Clusterizers
 {
     /// <summary>
     /// Кластеризатор
