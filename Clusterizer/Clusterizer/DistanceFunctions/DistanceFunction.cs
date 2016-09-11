@@ -14,8 +14,9 @@ namespace Clusterizer.DistanceFunctions
     public class DistanceFunction : IDistanceFunction
     {
         private List<string> words;
+        private readonly IEntitiesFactory factory;
 
-        public DistanceFunction(IEntitiesReader reader)
+        public DistanceFunction(IEntitiesReader reader, IEntitiesFactory factory)
         {
             words = new List<string>();
             foreach (var attrsList in reader.Entities.Select(e => e.TextAttributes))
@@ -29,6 +30,8 @@ namespace Clusterizer.DistanceFunctions
                     }
                 }
             }
+
+            this.factory = factory;
         }
 
         /// <summary>
@@ -60,7 +63,7 @@ namespace Clusterizer.DistanceFunctions
         /// <returns>Центральная сущность</returns>
         public IEntity Centroid(List<IEntity> entities)
         {
-            if (entities.Select(e => e.TextAttributes.Count).Distinct().Count() > 0)
+            if (entities.Select(e => e.TextAttributes.Count).Distinct().Count() > 1)
                 throw new ArgumentException("У сущностей разное количество атрибутов");
 
             List<List<string>> resultAttributes = new List<List<string>>();
@@ -72,7 +75,7 @@ namespace Clusterizer.DistanceFunctions
                     .SelectMany(l => l)
                     .ToList());
             }
-            return null;
+            return factory.CreateEntity(resultAttributes);
         }
 
         private double DistanceBetweenVectors(List<double> vector1, List<double> vector2)

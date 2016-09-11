@@ -14,7 +14,7 @@ namespace ClusterizerTests
         protected IKernel kernel;
 
         [TestInitialize]
-        public void Initialize()
+        public virtual void Initialize()
         {
             kernel = new StandardKernel(new DIModule());
         }
