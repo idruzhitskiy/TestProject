@@ -55,6 +55,58 @@ namespace ClusterizerTests.ClusterizerTests
             Assert.IsTrue(twoClusters.Count == 2);
         }
 
+        [TestMethod]
+        public void SimpleTest2()
+        {
+            // arrange
+            InitializeDistanceFunction(
+                (e1, e2) => 
+                Math.Abs(e1.TextAttributes[0].Count - e2.TextAttributes[0].Count) / (double)(e1.TextAttributes[0].Count + e2.TextAttributes[0].Count),
+                l => CreateEntity(new[] { new[] { "кот", "собака" } }));
+            var clusterizer = kernel.Get<IClusterizer>();
+
+            /*var elements = new List<IEntity> {
+                CreateEntity(new[] { new[] { "белый", "кот" } }),
+                CreateEntity(new[] { new[] { "черный", "кот" } }),
+                CreateEntity(new[] { new[] { "злая", "собака" } }),
+                CreateEntity(new[] { new[] { "добрая", "собака" } })
+            };*/
+            var elements = new List<IEntity> {
+                CreateEntity(new[] { new[] { "белый"} }),
+                CreateEntity(new[] { new[] { "черный", "розовый"} }),
+                CreateEntity(new[] { new[] { "кот"} }),
+                CreateEntity(new[] { new[] { "злая"} }),
+                CreateEntity(new[] { new[] { "добрая"} }),
+                CreateEntity(new[] { new[] { "собака"} })
+            };
+
+            bool exceptionOnZeroClusters = false;
+            bool exceptionOnEmptyList = false;
+            // act
+            try
+            {
+                var temp = clusterizer.Clusterize(elements, 0);
+            }
+            catch
+            {
+                exceptionOnZeroClusters = true;
+            }
+            try
+            {
+                var temp = clusterizer.Clusterize(new List<IEntity>(), 2);
+            }
+            catch
+            {
+                exceptionOnEmptyList = true;
+            }
+            var twoClusters = clusterizer.Clusterize(elements, 2);
+
+            // assert
+            Assert.IsTrue(exceptionOnZeroClusters);
+            Assert.IsTrue(exceptionOnEmptyList);
+            Assert.IsTrue(twoClusters.Count == 2);
+        }
+
         private void InitializeDistanceFunction(Func<IEntity, IEntity, double> dist, Func<List<IEntity>, IEntity> centr)
         {
             var distanceFunctionMock = new Mock<IDistanceFunction>();

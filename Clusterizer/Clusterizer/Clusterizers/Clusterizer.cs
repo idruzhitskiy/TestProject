@@ -28,8 +28,9 @@ namespace Clusterizer.Clusterizers
             bool changed = true;
             bool success = true;
 
-            List<int> clustering = InitializationClustering(entities.Count, numOfClusters, 0); 
-            List<IEntity> means = new List<IEntity>(numOfClusters);
+            List<int> clustering = InitializationClustering(entities.Count, numOfClusters, 0);
+            //List<IEntity> means = new List<IEntity>(numOfClusters); 
+            List<IEntity> means = InitializationMeans(numOfClusters, entities[0]);
 
             int count = 10 * entities.Count;
             int indexEntity = 0;
@@ -49,6 +50,9 @@ namespace Clusterizer.Clusterizers
             int numOfClusters = means.Count;
             List<int> clusters = new List<int>(numOfClusters);
             int count = entities.Count;
+
+            for (int i = 0; i < count; i++)
+                clusters.Add(0);
 
             for (int i = 0; i < count; i++)
             {
@@ -72,7 +76,7 @@ namespace Clusterizer.Clusterizers
                     if (clustering[j] == i)
                         tmpMeans.Add(entities[j]);
 
-                //newMeans.Add(GetCentroid(tmpMeans));
+                newMeans.Add(distanceFunction.Centroid(tmpMeans));
             }
 
             means = newMeans;
@@ -89,12 +93,12 @@ namespace Clusterizer.Clusterizers
             List<int> newClustering = new List<int>(clustering.Count);
             newClustering = clustering;
 
-            List<double> distance = new List<double>(numOfClusters);
-
             for (int i = 0; i < numOfEntities; i++)
             {
+                List<double> distance = new List<double>(numOfClusters);
+
                 for (int j = 0; j < numOfClusters; j++)
-                    distance[j] = distanceFunction.Distance(entities[i], means[j]);
+                    distance.Add(distanceFunction.Distance(entities[i], means[j]));
 
                 int index = GetMinIndex(distance);
                 if (index != newClustering[i])
@@ -108,6 +112,9 @@ namespace Clusterizer.Clusterizers
                 return false;
 
             List<int> clusters = new List<int>(numOfClusters);
+
+            for (int i = 0; i < numOfEntities; i++)
+                clusters.Add(0);
 
             for (int i = 0; i < numOfEntities; i++)
             {
@@ -130,18 +137,31 @@ namespace Clusterizer.Clusterizers
             Random random = new Random(seed);
 
             for (int i = 0; i < numOfClusters; i++)
-                clustering[i] = i;
+                clustering.Add(i);
 
             for (int i = numOfClusters; i < numOfEntities; i++)
-                clustering[i] = random.Next(0, numOfClusters);
+                clustering.Add(random.Next(0, numOfClusters));
         
             return clustering;
+        }
+
+        private List<IEntity> InitializationMeans(int numOfClusters, IEntity entity)
+        {
+            List<IEntity> means = new List<IEntity>(numOfClusters);
+
+            for (int i = 0; i < numOfClusters; i++)
+                means.Add(entity);
+
+            return means;
         }
 
         private List<List<IEntity>> GetClusters(List<IEntity> entities, List<int> clustering, int numOfClusters)
         {
             List<List<IEntity>> resultClusters = new List<List<IEntity>>(numOfClusters);
             int count = clustering.Count;
+
+            for (int i = 0; i < numOfClusters; i++)
+                resultClusters.Add(new List<IEntity>());
 
             for (int i = 0; i < count; i++)
                 resultClusters[clustering[i]].Add(entities[i]);
@@ -153,10 +173,10 @@ namespace Clusterizer.Clusterizers
         {
             int numOfDistances = distance.Count;
             int minIndex = 0;
-            double minDistance = distance[0];
+            double minDistance = distance[minIndex];
 
             for (int i = 0; i < numOfDistances; i++)
-                if (distance[i] < minDistance)
+                if (distance[i] <= minDistance)
                 {
                     minDistance = distance[i];
                     minIndex = i;
