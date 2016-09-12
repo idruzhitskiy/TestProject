@@ -37,15 +37,15 @@ namespace Clusterizer.Clusterizers
 
             while (changed && success && indexEntity < count)
             {
-                success = UpdateMeans(entities, clustering, means);
-                changed = UpdateClustering(entities, clustering, means);
+                success = UpdateMeans(entities, clustering, ref means);
+                changed = UpdateClustering(entities, ref clustering, means);
                 indexEntity++;
             }
 
             return GetClusters(entities, clustering, numOfClusters);
         }
 
-        private bool UpdateMeans(List<IEntity> entities, List<int> clustering, List<IEntity> means)
+        private bool UpdateMeans(List<IEntity> entities, List<int> clustering, ref List<IEntity> means)
         {
             int numOfClusters = means.Count;
             List<int> clusters = new List<int>(numOfClusters);
@@ -84,7 +84,7 @@ namespace Clusterizer.Clusterizers
             return true;
         }
 
-        private bool UpdateClustering(List<IEntity> entities, List<int> clustering, List<IEntity> means)
+        private bool UpdateClustering(List<IEntity> entities, ref List<int> clustering, List<IEntity> means)
         {
             int numOfClusters = means.Count;
             int numOfEntities = entities.Count;

@@ -16,7 +16,7 @@ namespace ClusterizerTests.ClusterizerTests
     public class ClusterizerTests : BaseTest
     {
         [TestMethod]
-        public void SimpleTest()
+        public void TestBaseProperties()
         {
             // arrange
             InitializeDistanceFunction(
@@ -56,55 +56,39 @@ namespace ClusterizerTests.ClusterizerTests
         }
 
         [TestMethod]
-        public void SimpleTest2()
+        public void TestClusterization()
         {
             // arrange
             InitializeDistanceFunction(
-                (e1, e2) => 
-                Math.Abs(e1.TextAttributes[0].Count - e2.TextAttributes[0].Count) / (double)(e1.TextAttributes[0].Count + e2.TextAttributes[0].Count),
-                l => CreateEntity(new[] { new[] { "кот", "собака" } }));
+                (e1, e2) => Math.Abs(e1.TextAttributes[0].Count - e2.TextAttributes[0].Count) / (double)(e1.TextAttributes[0].Count + e2.TextAttributes[0].Count),
+                l => CreateEntity(new List<List<string>>
+                {
+                    l.SelectMany(e => e.TextAttributes[0]).Take(l.SelectMany(e => e.TextAttributes[0]).Count() / l.Count).ToList()
+                }));
             var clusterizer = kernel.Get<IClusterizer>();
-
-            /*var elements = new List<IEntity> {
-                CreateEntity(new[] { new[] { "белый", "кот" } }),
-                CreateEntity(new[] { new[] { "черный", "кот" } }),
-                CreateEntity(new[] { new[] { "злая", "собака" } }),
-                CreateEntity(new[] { new[] { "добрая", "собака" } })
-            };*/
             var elements = new List<IEntity> {
-                CreateEntity(new[] { new[] { "белый"} }),
-                CreateEntity(new[] { new[] { "черный", "розовый"} }),
-                CreateEntity(new[] { new[] { "кот"} }),
-                CreateEntity(new[] { new[] { "злая"} }),
-                CreateEntity(new[] { new[] { "добрая"} }),
-                CreateEntity(new[] { new[] { "собака"} })
+                CreateEntity(new[] { new[] { "!"} }),
+                CreateEntity(new[] { new[] { "!", "!"} }),
+                CreateEntity(new[] { new[] { "!" } }),
+                CreateEntity(new[] { new[] { "!", "!", "!", "!", "!", "!", "!", "!" } }),
+                CreateEntity(new[] { new[] { "!", "!", "!", "!", "!", "!", "!", "!", "!" } }),
+                CreateEntity(new[] { new[] { "!", "!", "!", "!", "!", "!", "!", "!", "!", "!" } })
             };
 
-            bool exceptionOnZeroClusters = false;
-            bool exceptionOnEmptyList = false;
             // act
-            try
-            {
-                var temp = clusterizer.Clusterize(elements, 0);
-            }
-            catch
-            {
-                exceptionOnZeroClusters = true;
-            }
-            try
-            {
-                var temp = clusterizer.Clusterize(new List<IEntity>(), 2);
-            }
-            catch
-            {
-                exceptionOnEmptyList = true;
-            }
-            var twoClusters = clusterizer.Clusterize(elements, 2);
+            var clusters = clusterizer.Clusterize(elements, 2);
 
             // assert
-            Assert.IsTrue(exceptionOnZeroClusters);
-            Assert.IsTrue(exceptionOnEmptyList);
-            Assert.IsTrue(twoClusters.Count == 2);
+            Assert.IsTrue(clusters.Any(c => c.Contains(elements[0])));
+            int i = 0;
+            if (!clusters[i].Contains(elements[0]))
+                i = 1;
+            Assert.IsTrue(clusters[i].Contains(elements[0]) 
+                && clusters[i].Contains(elements[1]) 
+                && clusters[i].Contains(elements[2]));
+            Assert.IsTrue(clusters[1 - i].Contains(elements[3]) 
+                && clusters[1 - i].Contains(elements[4]) 
+                && clusters[1 - i].Contains(elements[5]));
         }
 
         private void InitializeDistanceFunction(Func<IEntity, IEntity, double> dist, Func<List<IEntity>, IEntity> centr)
