@@ -11,7 +11,7 @@ namespace Clusterizer.Clusterizers
     /// <summary>
     /// Кластеризатор
     /// </summary>
-    interface IClusterizer
+    public interface IClusterizer
     {
         /// <summary>
         /// Функция кластеризации
