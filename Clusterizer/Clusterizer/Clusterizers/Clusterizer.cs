@@ -10,7 +10,12 @@ namespace Clusterizer.Clusterizers
 {
     public class Clusterizer : IClusterizer
     {
-        private DistanceFunction distanceFunction;
+        private readonly IDistanceFunction distanceFunction;
+
+        public Clusterizer(IDistanceFunction distanceFunction)
+        {
+            this.distanceFunction = distanceFunction;
+        }
 
         public List<List<IEntity>> Clusterize(List<IEntity> entities, int numOfClusters)
         {
