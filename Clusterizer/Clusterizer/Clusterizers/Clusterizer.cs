@@ -148,25 +148,9 @@ namespace Clusterizer.Clusterizers
         {
             int numOfEntities = entities.Count;
             List<IEntity> means = new List<IEntity>(numOfClusters);
-            Dictionary<int, double> distances = new Dictionary<int, double>(numOfEntities - 1);
 
-            for (int i = 1; i < numOfEntities; i++)
-                distances.Add(i, distanceFunction.Distance(entities[0], entities[i]));
-
-            var items = from item in distances orderby item.Value descending select item.Key;
-            means.Add(entities[0]);
-
-            int step = 0;
-            int val = numOfEntities / numOfClusters;
-
-            for (int i = 0; i < numOfClusters - 1; i++)
-            {
-                if (i != 0)
-                    step = val;
-
-                int index = items.ElementAtOrDefault(i + step);
-                means.Add(entities[index]);
-            }
+            for (int i = 0; i < numOfClusters; i++)
+                means.Add(entities[i]);
 
             return means;
         }
