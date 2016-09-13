@@ -1,4 +1,5 @@
-﻿using Clusterizer.DistanceFunctions;
+﻿using Clusterizer.Clusterizers;
+using Clusterizer.DistanceFunctions;
 using Clusterizer.EntitiesReaders;
 using Clusterizer.Entities;
 using Ninject.Modules;
@@ -19,6 +20,7 @@ namespace Clusterizer
             Bind<IDistanceFunction>().To<DistanceFunction>();
             Bind<IEntitiesReader>().To<EntitiesReader>();
             Bind<IEntitiesFactory>().To<SimpleEntitiesFactory>();
+            Bind<IClusterizer>().To<Clusterizers.Clusterizer>();
         }
     }
 }

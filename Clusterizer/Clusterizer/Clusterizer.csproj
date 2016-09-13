@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clusterizers\Clusterizer.cs" />
     <Compile Include="DIModule.cs" />
     <Compile Include="EntitiesReaders\EntitiesReader.cs" />
     <Compile Include="Entities\IEntitiesFactory.cs" />
