@@ -63,6 +63,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BaseTest.cs" />
+    <Compile Include="EntitiesReaderTests\EntitiesReaderTests.cs" />
     <Compile Include="ClusterizerTests\ClusterizerTests.cs" />
     <Compile Include="EntitiesTests\EntitiesFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
