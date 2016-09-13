@@ -15,6 +15,52 @@ namespace ClusterizerTests.EntitiesReaderTests
     [TestClass]
     public class EntitiesReaderTests : BaseTest
     {
+        [TestInitialize]
+        public override void Initialize()
+        {
+            base.Initialize();
+            InitializeSimpleEntitiesFactory();
+        }
+
+        [TestMethod]
+        public void EmptyStream()
+        {
+            // arrange
+            GenerateStreamFromString(" ");
+            var reader = kernel.Get<IEntitiesReader>();
+
+            // act
+            var entities = reader.Entities;
+
+            // assert
+            Assert.IsTrue(entities.Count == 0);
+        }
+
+        [TestMethod]
+        public void SingleEntityWithNoise()
+        {
+            // arrange
+            GenerateStreamFromString(
+                            "Start with noise\n" +
+                            "#Entity\n" +
+                            "some noise here\n" +
+                            "- attribute number one\n" +
+                            "more noise here\n" +
+                            "and here\n" +
+                            "- attriubte number two !\n"
+                            );
+            var reader = kernel.Get<IEntitiesReader>();
+
+            // act
+            var entities = reader.Entities;
+
+            // assert
+            Assert.IsTrue(entities.Count == 1);
+            Assert.IsTrue(entities[0].TextAttributes.Count == 2);
+            Assert.IsTrue(entities[0].TextAttributes[0].Count == 3 && entities[0].TextAttributes[1].Count == 4);
+
+        }
+
         [TestMethod]
         public void SingleEntityMultipleAttributes()
         {
@@ -24,7 +70,6 @@ namespace ClusterizerTests.EntitiesReaderTests
                             "- attribute number one\n" +
                             "- attriubte number two\n"
                             );
-            InitializeSimpleEntitiesFactory();
             var reader = kernel.Get<IEntitiesReader>();
 
             // act
@@ -50,7 +95,6 @@ namespace ClusterizerTests.EntitiesReaderTests
                             "- attribute number one\n" +
                             "- attriubte number two\n"
                             );
-            InitializeSimpleEntitiesFactory();
             var reader = kernel.Get<IEntitiesReader>();
 
             // act
@@ -75,7 +119,6 @@ namespace ClusterizerTests.EntitiesReaderTests
                             "#Entity\n" +
                             "- attribute number one\n"
                             );
-            InitializeSimpleEntitiesFactory();
             var reader = kernel.Get<IEntitiesReader>();
 
             // act
