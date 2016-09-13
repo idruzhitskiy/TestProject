@@ -91,6 +91,41 @@ namespace ClusterizerTests.ClusterizerTests
                 && clusters[1 - i].Contains(elements[5]));
         }
 
+
+        [TestMethod]
+        public void TestClusterizationWithThreeClusters()
+        {
+            // arrange
+            InitializeDistanceFunction(
+                (e1, e2) => Math.Abs(e1.TextAttributes[0].Count - e2.TextAttributes[0].Count) / (double)(e1.TextAttributes[0].Count + e2.TextAttributes[0].Count),
+                l => CreateEntity(new List<List<string>>
+                {
+                    l.SelectMany(e => e.TextAttributes[0]).Take(l.SelectMany(e => e.TextAttributes[0]).Count() / l.Count).ToList()
+                }));
+            var clusterizer = kernel.Get<IClusterizer>();
+            var elements = new List<IEntity> {
+                CreateEntity(new[] { new[] { "а"} }),
+                CreateEntity(new[] { new[] { "б", "в"} }),
+                CreateEntity(new[] { new[] { "г" } }),
+                CreateEntity(new[] { new[] { "д", "е", "з", "ж", "и" } }),
+                CreateEntity(new[] { new[] { "к", "л", "м", "н"} }),
+                CreateEntity(new[] { new[] { "о", "п", "р", "с", "т", "у", "ф", "х" } }),
+                CreateEntity(new[] { new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9" } })
+            };
+
+            // act
+            var clusters = clusterizer.Clusterize(elements, 3);
+
+            // assert
+            Assert.IsTrue(clusters[0].Contains(elements[0])
+                && clusters[0].Contains(elements[1])
+                && clusters[0].Contains(elements[2]));
+            Assert.IsTrue(clusters[2].Contains(elements[3]) 
+                && clusters[2].Contains(elements[4]));
+            Assert.IsTrue(clusters[1].Contains(elements[5])
+                && clusters[1].Contains(elements[6]));
+        }
+
         private void InitializeDistanceFunction(Func<IEntity, IEntity, double> dist, Func<List<IEntity>, IEntity> centr)
         {
             var distanceFunctionMock = new Mock<IDistanceFunction>();
