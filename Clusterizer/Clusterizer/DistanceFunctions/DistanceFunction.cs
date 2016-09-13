@@ -99,13 +99,6 @@ namespace Clusterizer.DistanceFunctions
             return Math.Sqrt(sum);
         }
 
-        private List<double> NormalizeVector(List<double> vector)
-        {
-            var length = EuclidDistance(vector);
-            double invLength = (length > 0) ? (1.0 / length) : 0;
-            return vector.Select(num => num * invLength).ToList();
-        }
-
         private List<double> FillWordCountVector(List<string> list)
         {
             List<double> result = new List<double>();

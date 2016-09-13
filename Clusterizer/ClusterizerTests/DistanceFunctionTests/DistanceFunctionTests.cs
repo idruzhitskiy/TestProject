@@ -25,6 +25,43 @@ namespace ClusterizerTests
         }
 
         [TestMethod]
+        public void ArgumentsTest()
+        {
+            // arrange
+            var entities = new List<IEntity>
+            {
+                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","1","1","1"}, new List<string> { "3" } }),
+                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "2","2","2","2"} })
+            };
+            var reader = InitializeReader(new List<IEntity>());
+            var distanceFunction = kernel.Get<IDistanceFunction>();
+            bool distanceArgumentsException = false;
+            bool centroidArgumentsException = false;
+
+            // act
+            try
+            {
+                distanceFunction.Distance(entities[0], entities[1]);
+            }
+            catch(ArgumentException)
+            {
+                distanceArgumentsException = true;
+            }
+            try
+            {
+                distanceFunction.Centroid(entities);
+            }
+            catch(ArgumentException)
+            {
+                centroidArgumentsException = true;
+            }
+
+            // assert
+            Assert.IsTrue(distanceArgumentsException);
+            Assert.IsTrue(centroidArgumentsException);
+        }
+
+        [TestMethod]
         public void MinMaxDistanceTest()
         {
             // arrange
