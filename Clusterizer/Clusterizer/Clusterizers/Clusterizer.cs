@@ -20,10 +20,10 @@ namespace Clusterizer.Clusterizers
         public List<List<IEntity>> Clusterize(List<IEntity> entities, int numOfClusters)
         {
             if (numOfClusters <= 0)
-                throw new Exception("Number of clusters is negative or equal zero!");
+                throw new ArgumentException("Отрицательное число кластеров или число кластеров равно нулю!");
 
             if (entities.Count < numOfClusters)
-                throw new Exception("Number of clusters is more than elements!");
+                throw new ArgumentException("Количество кластеров больше, чем число элементов!");
 
             bool changed = true;
             bool success = true;
