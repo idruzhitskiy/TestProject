@@ -29,8 +29,7 @@ namespace Clusterizer.Clusterizers
             bool success = true;
 
             List<int> clustering = InitializationClustering(entities.Count, numOfClusters, 0);
-            //List<IEntity> means = new List<IEntity>(numOfClusters); 
-            List<IEntity> means = InitializationMeans(numOfClusters, entities[0]);
+            List<IEntity> means = InitializationMeans(numOfClusters, entities);
 
             int count = 10 * entities.Count;
             int indexEntity = 0;
@@ -145,12 +144,29 @@ namespace Clusterizer.Clusterizers
             return clustering;
         }
 
-        private List<IEntity> InitializationMeans(int numOfClusters, IEntity entity)
+        private List<IEntity> InitializationMeans(int numOfClusters, List<IEntity> entities)
         {
+            int numOfEntities = entities.Count;
             List<IEntity> means = new List<IEntity>(numOfClusters);
+            Dictionary<int, double> distances = new Dictionary<int, double>(numOfEntities - 1);
 
-            for (int i = 0; i < numOfClusters; i++)
-                means.Add(entity);
+            for (int i = 1; i < numOfEntities; i++)
+                distances.Add(i, distanceFunction.Distance(entities[0], entities[i]));
+
+            var items = from item in distances orderby item.Value descending select item.Key;
+            means.Add(entities[0]);
+
+            int step = 0;
+            int val = numOfEntities / numOfClusters;
+
+            for (int i = 0; i < numOfClusters - 1; i++)
+            {
+                if (i != 0)
+                    step = val;
+
+                int index = items.ElementAtOrDefault(i + step);
+                means.Add(entities[index]);
+            }
 
             return means;
         }
@@ -176,7 +192,7 @@ namespace Clusterizer.Clusterizers
             double minDistance = distance[minIndex];
 
             for (int i = 0; i < numOfDistances; i++)
-                if (distance[i] <= minDistance)
+                if (distance[i] < minDistance)
                 {
                     minDistance = distance[i];
                     minIndex = i;
