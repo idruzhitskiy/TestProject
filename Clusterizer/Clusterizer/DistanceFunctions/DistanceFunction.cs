@@ -14,8 +14,9 @@ namespace Clusterizer.DistanceFunctions
     public class DistanceFunction : IDistanceFunction
     {
         private List<string> words;
+        private readonly IEntitiesFactory factory;
 
-        public DistanceFunction(IEntitiesReader reader)
+        public DistanceFunction(IEntitiesReader reader, IEntitiesFactory factory)
         {
             words = new List<string>();
             foreach (var attrsList in reader.Entities.Select(e => e.TextAttributes))
@@ -29,6 +30,8 @@ namespace Clusterizer.DistanceFunctions
                     }
                 }
             }
+
+            this.factory = factory;
         }
 
         /// <summary>
@@ -51,6 +54,28 @@ namespace Clusterizer.DistanceFunctions
             }
             result /= entity1.TextAttributes.Count;
             return result;
+        }
+
+        /// <summary>
+        /// Поиск центроиды
+        /// </summary>
+        /// <param name="entities">Сущности</param>
+        /// <returns>Центральная сущность</returns>
+        public IEntity Centroid(List<IEntity> entities)
+        {
+            if (entities.Select(e => e.TextAttributes.Count).Distinct().Count() > 1)
+                throw new ArgumentException("У сущностей разное количество атрибутов");
+
+            List<List<string>> resultAttributes = new List<List<string>>();
+            for (int i = 0; i < entities[0].TextAttributes.Count; i++)
+            {
+                resultAttributes.Add(
+                    entities
+                    .Select(e => e.TextAttributes[i])
+                    .SelectMany(l => l)
+                    .ToList());
+            }
+            return factory.CreateEntity(resultAttributes);
         }
 
         private double DistanceBetweenVectors(List<double> vector1, List<double> vector2)
@@ -96,11 +121,6 @@ namespace Clusterizer.DistanceFunctions
                 }
             }
             return result;
-        }
-
-        public IEntity Centroid(List<IEntity> entities)
-        {
-            throw new NotImplementedException();
         }
     }
 }

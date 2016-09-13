@@ -17,6 +17,13 @@ namespace ClusterizerTests
     [TestClass]
     public class DistanceFunctionTests : BaseTest
     {
+        [TestInitialize]
+        public override void Initialize()
+        {
+            base.Initialize();
+            InitializeSimpleFactory();
+        }
+
         [TestMethod]
         public void MinMaxDistanceTest()
         {
@@ -65,6 +72,29 @@ namespace ClusterizerTests
             Assert.IsTrue(threeQuartersDiff < fullDiff);
         }
 
+        [TestMethod]
+        public void TestCentroid()
+        {
+            // arrange
+            var entities = new List<IEntity>
+            {
+                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "0","0","0","0"} }),
+                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","1","2","2"} })
+            };
+            var reader = InitializeReader(entities);
+            var distanceFunction = kernel.Get<IDistanceFunction>();
+
+            // act
+            var centroid = distanceFunction.Centroid(reader.Entities);
+            var distanceBetween = distanceFunction.Distance(reader.Entities[0], reader.Entities[1]);
+            var distanceCentroidToFirst = distanceFunction.Distance(reader.Entities[0], centroid);
+            var distanceCentroidToSecond = distanceFunction.Distance(reader.Entities[1], centroid);
+
+            // assert
+            Assert.IsTrue(distanceCentroidToFirst < distanceBetween);
+            Assert.IsTrue(distanceCentroidToSecond < distanceBetween);
+        }
+
         private IEntitiesReader InitializeReader(List<IEntity> entities)
         {
             var readerMock = new Mock<IEntitiesReader>();
@@ -72,6 +102,15 @@ namespace ClusterizerTests
             var reader = readerMock.Object;
             kernel.Rebind<IEntitiesReader>().ToConstant(reader);
             return reader;
+        }
+
+        private void InitializeSimpleFactory()
+        {
+            var factoryMock = new Mock<IEntitiesFactory>();
+            factoryMock
+                .Setup(r => r.CreateEntity(It.IsAny<List<List<string>>>()))
+                .Returns<List<List<string>>>(attrs => Mock.Of<IEntity>(e => e.TextAttributes == attrs));
+            kernel.Rebind<IEntitiesFactory>().ToConstant(factoryMock.Object);
         }
     }
 }
