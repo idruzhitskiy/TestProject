@@ -58,7 +58,6 @@ namespace ClusterizerTests.EntitiesReaderTests
             Assert.IsTrue(entities.Count == 1);
             Assert.IsTrue(entities[0].TextAttributes.Count == 2);
             Assert.IsTrue(entities[0].TextAttributes[0].Count == 3 && entities[0].TextAttributes[1].Count == 4);
-
         }
 
         [TestMethod]

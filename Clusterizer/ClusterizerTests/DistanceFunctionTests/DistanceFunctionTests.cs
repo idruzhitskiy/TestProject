@@ -30,8 +30,8 @@ namespace ClusterizerTests
             // arrange
             var entities = new List<IEntity>
             {
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","1","1","1"}, new List<string> { "3" } }),
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "2","2","2","2"} })
+                CreateEntity(new[] {new[] { "1","1","1","1"}, new [] { "3" } }),
+                CreateEntity(new[] {new[] { "2","2","2","2"} })
             };
             var reader = InitializeReader(new List<IEntity>());
             var distanceFunction = kernel.Get<IDistanceFunction>();
@@ -43,7 +43,7 @@ namespace ClusterizerTests
             {
                 distanceFunction.Distance(entities[0], entities[1]);
             }
-            catch(ArgumentException)
+            catch (ArgumentException)
             {
                 distanceArgumentsException = true;
             }
@@ -51,7 +51,7 @@ namespace ClusterizerTests
             {
                 distanceFunction.Centroid(entities);
             }
-            catch(ArgumentException)
+            catch (ArgumentException)
             {
                 centroidArgumentsException = true;
             }
@@ -67,8 +67,8 @@ namespace ClusterizerTests
             // arrange
             var entities = new List<IEntity>
             {
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","1","1","1"} }),
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "2","2","2","2"} })
+                CreateEntity(new[] {new[] { "1","1","1","1"} }),
+                CreateEntity(new[] {new[] { "2","2","2","2"} })
             };
             var reader = InitializeReader(entities);
             var distanceFunction = kernel.Get<IDistanceFunction>();
@@ -88,11 +88,11 @@ namespace ClusterizerTests
             // arrange
             var entities = new List<IEntity>
             {
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "0","0","0","0"} }),
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "0","0","0","2"} }),
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "0","0","2","3"} }),
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "0","2","3","4"} }),
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","2","3","4"} })
+                CreateEntity(new[] {new[] { "0","0","0","0"} }),
+                CreateEntity(new[] {new[] { "0","0","0","2"} }),
+                CreateEntity(new[] {new[] { "0","0","2","3"} }),
+                CreateEntity(new[] {new[] { "0","2","3","4"} }),
+                CreateEntity(new[] {new[] { "1","2","3","4"} })
             };
             var reader = InitializeReader(entities);
             var distanceFunction = kernel.Get<IDistanceFunction>();
@@ -115,8 +115,8 @@ namespace ClusterizerTests
             // arrange
             var entities = new List<IEntity>
             {
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "0","0","0","0"} }),
-                Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>> {new List<string> { "1","1","2","2"} })
+                CreateEntity(new[] {new[] { "0","0","0","0"}}),
+                CreateEntity(new[] {new[] { "1","1","2","2"}})
             };
             var reader = InitializeReader(entities);
             var distanceFunction = kernel.Get<IDistanceFunction>();
@@ -130,6 +130,11 @@ namespace ClusterizerTests
             // assert
             Assert.IsTrue(distanceCentroidToFirst < distanceBetween);
             Assert.IsTrue(distanceCentroidToSecond < distanceBetween);
+        }
+
+        private IEntity CreateEntity(IEnumerable<IEnumerable<string>> attrs)
+        {
+            return Mock.Of<IEntity>(e => e.TextAttributes == new List<List<string>>(attrs.Select(el => new List<string>(el))));
         }
 
         private IEntitiesReader InitializeReader(List<IEntity> entities)
