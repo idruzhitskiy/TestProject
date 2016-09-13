@@ -1,4 +1,6 @@
 ﻿using Clusterizer.DistanceFunctions;
+using Clusterizer.EntitiesReaders;
+using Clusterizer.Entities;
 using Ninject.Modules;
 using System;
 using System.Collections.Generic;
@@ -15,6 +17,8 @@ namespace Clusterizer
             // Сюда добавлять реализации абстрактных классов, например
             // Bind<Interface>().To<Realisation>()
             Bind<IDistanceFunction>().To<DistanceFunction>();
+            Bind<IEntitiesReader>().To<EntitiesReader>();
+            Bind<IEntitiesFactory>().To<SimpleEntitiesFactory>();
         }
     }
 }
