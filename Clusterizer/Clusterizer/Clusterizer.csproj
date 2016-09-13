@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DIModule.cs" />
+    <Compile Include="EntitiesReaders\EntitiesReader.cs" />
     <Compile Include="Entities\IEntitiesFactory.cs" />
     <Compile Include="Entities\SimpleEntitiesFactory.cs" />
     <Compile Include="Entities\SimpleEntity.cs" />
