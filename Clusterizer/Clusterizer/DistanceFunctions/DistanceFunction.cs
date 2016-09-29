@@ -42,6 +42,8 @@ namespace Clusterizer.DistanceFunctions
         /// <returns>{0;1}</returns>
         public double Distance(IEntity entity1, IEntity entity2)
         {
+            if (entity1 == null && entity2 == null)
+                throw new ArgumentNullException();
             if (entity1.TextAttributes.Count != entity2.TextAttributes.Count)
                 throw new ArgumentException("У объектов различное число атрибутов");
 
@@ -63,6 +65,8 @@ namespace Clusterizer.DistanceFunctions
         /// <returns>Центральная сущность</returns>
         public IEntity Centroid(List<IEntity> entities)
         {
+            if (entities == null)
+                throw new ArgumentNullException();
             if (entities.Select(e => e.TextAttributes.Count).Distinct().Count() > 1)
                 throw new ArgumentException("У сущностей разное количество атрибутов");
 
