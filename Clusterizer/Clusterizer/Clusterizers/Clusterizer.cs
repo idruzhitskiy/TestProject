@@ -25,6 +25,9 @@ namespace Clusterizer.Clusterizers
             if (entities.Count < numOfClusters)
                 throw new ArgumentException("Количество кластеров больше, чем число элементов!");
 
+            if (entities.Count == numOfClusters)
+                return GetClusters(entities, numOfClusters);
+
             bool changed = true;
             bool success = true;
 
@@ -168,6 +171,20 @@ namespace Clusterizer.Clusterizers
 
             return resultClusters;
         }
+
+        private List<List<IEntity>> GetClusters(List<IEntity> entities, int numOfClusters)
+        {
+            List<List<IEntity>> resultClusters = new List<List<IEntity>>(numOfClusters);
+
+            for (int i = 0; i < numOfClusters; i++)
+                resultClusters.Add(new List<IEntity>());
+
+            for (int i = 0; i < numOfClusters; i++)
+                resultClusters[i].Add(entities[i]);
+
+            return resultClusters;
+        }
+
 
         private int GetMinIndex(List<double> distance)
         {
