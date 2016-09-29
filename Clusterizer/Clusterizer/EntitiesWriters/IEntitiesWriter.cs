@@ -7,7 +7,7 @@ using Clusterizer.Entities;
 
 namespace Clusterizer.EntitiesWriters
 {
-    class IEntitiesWriter
+    public interface IEntitiesWriter
     {
     }    
 }
