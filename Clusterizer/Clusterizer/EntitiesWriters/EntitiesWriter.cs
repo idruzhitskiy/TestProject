@@ -11,15 +11,13 @@ namespace Clusterizer.EntitiesWriters
     class EntitiesWriter : IEntitiesWriter
     {
         private readonly TextWriter textWriter;
-        private readonly List<List<IEntity>> entities;
 
-        public EntitiesWriter(TextWriter textWriter, List<List<IEntity>> entities)
+        public EntitiesWriter(TextWriter textWriter)
         {
-            this.textWriter = textWriter;
-            this.entities = entities;
+            this.textWriter = textWriter;            
         }
 
-        public void Write()
+        public void Write(List<List<IEntity>> entities)
         {
             int i = 1;
             foreach (List<IEntity> cluster in entities)
