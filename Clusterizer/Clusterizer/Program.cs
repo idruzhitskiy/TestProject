@@ -13,9 +13,16 @@ namespace Clusterizer
     {
         static void Main(string[] args)
         {
+            if (args.Count() < 3)
+            {
+                Console.WriteLine("Использование: clusterizer.exe filename num_of_clusters");
+            }
+
+
             // Инициализация DI
             IKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
+
         }
     }
 }
