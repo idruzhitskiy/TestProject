@@ -8,7 +8,7 @@ using Clusterizer.Entities;
 
 namespace Clusterizer.EntitiesWriters
 {
-    class EntitiesWriter : IEntitiesWriter
+    public class EntitiesWriter : IEntitiesWriter
     {
         private readonly TextWriter textWriter;
 
@@ -17,10 +17,10 @@ namespace Clusterizer.EntitiesWriters
             this.textWriter = textWriter;            
         }
 
-        public void Write(List<List<IEntity>> entities)
+        public void Write(List<List<IEntity>> clusters)
         {
             int i = 1;
-            foreach (List<IEntity> cluster in entities)
+            foreach (List<IEntity> cluster in clusters)
             {
                 textWriter.WriteLine("@Кластер {0}", i++);
                 int j = 1;
