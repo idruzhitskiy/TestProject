@@ -28,6 +28,7 @@ namespace Clusterizer
             kernel.Rebind<TextReader>().ToConstant(new StreamReader(args[0]));
             var res = kernel.Get<IClusterizer>().Clusterize(kernel.Get<IEntitiesReader>().Entities, Convert.ToInt32(args[1]));
 
+            //kernel.Get<IEntitiesWriter>().Write(res);
             EntitiesWriter writer = new EntitiesWriter(File.CreateText("clusters.txt"));
             writer.Write(res);            
         }
