@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Clusterizer.Clusterizers;
 using Clusterizer.EntitiesReaders;
+using Clusterizer.EntitiesWriters;
 
 namespace Clusterizer
 {
@@ -26,6 +27,9 @@ namespace Clusterizer
             kernel.Load(Assembly.GetExecutingAssembly());
             kernel.Rebind<TextReader>().ToConstant(new StreamReader(args[0]));
             var res = kernel.Get<IClusterizer>().Clusterize(kernel.Get<IEntitiesReader>().Entities, Convert.ToInt32(args[1]));
+
+            EntitiesWriter writer = new EntitiesWriter(File.CreateText("clusters.txt"));
+            writer.Write(res);            
         }
     }
 }

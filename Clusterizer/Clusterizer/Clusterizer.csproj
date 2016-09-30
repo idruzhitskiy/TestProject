@@ -50,6 +50,8 @@
     <Compile Include="Clusterizers\Clusterizer.cs" />
     <Compile Include="DIModule.cs" />
     <Compile Include="EntitiesReaders\EntitiesReader.cs" />
+    <Compile Include="EntitiesWriters\EntitiesWriter.cs" />
+    <Compile Include="EntitiesWriters\IEntitiesWriter.cs" />
     <Compile Include="Entities\IEntitiesFactory.cs" />
     <Compile Include="Entities\SimpleEntitiesFactory.cs" />
     <Compile Include="Entities\SimpleEntity.cs" />

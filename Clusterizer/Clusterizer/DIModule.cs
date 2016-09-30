@@ -2,6 +2,7 @@
 using Clusterizer.DistanceFunctions;
 using Clusterizer.EntitiesReaders;
 using Clusterizer.Entities;
+using Clusterizer.EntitiesWriters;
 using Ninject.Modules;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace Clusterizer
             Bind<IEntitiesReader>().To<EntitiesReader>().InSingletonScope();
             Bind<IEntitiesFactory>().To<SimpleEntitiesFactory>();
             Bind<IClusterizer>().To<Clusterizers.Clusterizer>();
+            Bind<IEntitiesWriter>().To<EntitiesWriter>();
         }
     }
 }
