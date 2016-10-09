@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Clusterizer.RemoteDatabases;
 
 namespace Clusterizer
 {
@@ -23,6 +24,7 @@ namespace Clusterizer
             Bind<IEntitiesFactory>().To<SimpleEntitiesFactory>();
             Bind<IClusterizer>().To<Clusterizers.Clusterizer>();
             Bind<IEntitiesWriter>().To<EntitiesWriter>();
+            Bind<IRemoteDatabase>().To<FileRemoteDatabase>();
         }
     }
 }
