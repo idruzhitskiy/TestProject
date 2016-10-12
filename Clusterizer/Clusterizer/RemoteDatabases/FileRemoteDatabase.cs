@@ -41,7 +41,7 @@ namespace Clusterizer.RemoteDatabases
                             curStr.Split(new char[] { '=' })[1]
                                 .Split(new char[] { ';' })
                                 .Select(s => s.Split(new char[] { ' ' }).ToList())
-                                .ToList(), 
+                                .ToList(),
                             curStr.Split(new char[] { '=' })[0]);
                     }
                 }
@@ -51,7 +51,41 @@ namespace Clusterizer.RemoteDatabases
 
         public bool RemoveEntity(IEntity entity)
         {
-            throw new NotImplementedException();
+            var result = false;
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var outStream = new StreamWriter(memoryStream))
+                {
+                    using (var f = new StreamReader("db.txt"))
+                    {
+                        var id = entity.Id;
+                        string curStr = null;
+                        while (!string.IsNullOrWhiteSpace(curStr = f.ReadLine()))
+                        {
+                            if (!curStr.Contains(id))
+                            {
+                                outStream.WriteLine(curStr);
+                            }
+                            else
+                            {
+                                result = true;
+                            }
+                        }
+                    }
+                    memoryStream.Position = 0;
+                    using (var outFile = new StreamWriter("db.txt"))
+                    {
+                        using (var outReader = new StreamReader(memoryStream))
+                        {
+                            string curStr = null;
+                            while (!string.IsNullOrWhiteSpace(curStr = outReader.ReadLine()))
+                                outFile.WriteLine(curStr);
+                        }
+                    }
+                }
+                
+            }
+            return result;
         }
     }
 }

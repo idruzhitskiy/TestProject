@@ -21,8 +21,11 @@ namespace ClusterizerTests.RemoteDatabaseTests
 
             remoteDatabase.AddEntity(factory.CreateEntity(new List<List<string>> { new List<string> { "1", "2" } }));
             var entity = remoteDatabase.FindEntity(new List<List<string>> { new List<string> { "1", "2" } });
+            remoteDatabase.RemoveEntity(entity);
+            var nullEntity = remoteDatabase.FindEntity(new List<List<string>> { new List<string> { "1", "2" } });
 
             Assert.IsNotNull(entity);
+            Assert.IsNull(nullEntity);
         }
     }
 }
