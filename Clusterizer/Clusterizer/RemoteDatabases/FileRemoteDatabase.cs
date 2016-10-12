@@ -20,73 +20,94 @@ namespace Clusterizer.RemoteDatabases
 
         public bool AddEntity(IEntity entity)
         {
-            using (var f = new StreamWriter(dbFile))
+            try
             {
-                var str = entity.Id + "=" + string.Join(";", entity.TextAttributes.Select(l => string.Join(" ", l)));
-                f.WriteLine(str);
-                return true;
+                using (var f = new StreamWriter(dbFile))
+                {
+                    var str = entity.Id + "=" + string.Join(";", entity.TextAttributes.Select(l => string.Join(" ", l)));
+                    f.WriteLine(str);
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
             }
         }
 
         public IEntity FindEntity(List<List<string>> attributes)
         {
-            using (var f = new StreamReader(dbFile))
+            try
             {
-                var str = string.Join(";", attributes.Select(l => string.Join(" ", l)));
-                string curStr = null;
-                while (!string.IsNullOrWhiteSpace(curStr = f.ReadLine()))
+                using (var f = new StreamReader(dbFile))
                 {
-                    if (curStr.Contains(str))
+                    var str = string.Join(";", attributes.Select(l => string.Join(" ", l)));
+                    string curStr = null;
+                    while (!string.IsNullOrWhiteSpace(curStr = f.ReadLine()))
                     {
-                        return entitiesFactory.CreateEntityWithId(
-                            curStr.Split(new char[] { '=' })[1]
-                                .Split(new char[] { ';' })
-                                .Select(s => s.Split(new char[] { ' ' }).ToList())
-                                .ToList(),
-                            curStr.Split(new char[] { '=' })[0]);
+                        if (curStr.Contains(str))
+                        {
+                            return entitiesFactory.CreateEntityWithId(
+                                curStr.Split(new char[] { '=' })[1]
+                                    .Split(new char[] { ';' })
+                                    .Select(s => s.Split(new char[] { ' ' }).ToList())
+                                    .ToList(),
+                                curStr.Split(new char[] { '=' })[0]);
+                        }
                     }
+                    return null;
                 }
+            }
+            catch
+            {
                 return null;
             }
         }
 
         public bool RemoveEntity(IEntity entity)
         {
-            var result = false;
-            using (var memoryStream = new MemoryStream())
+            try
             {
-                using (var outStream = new StreamWriter(memoryStream))
+                var result = false;
+                using (var memoryStream = new MemoryStream())
                 {
-                    using (var f = new StreamReader(dbFile))
+                    using (var outStream = new StreamWriter(memoryStream))
                     {
-                        var id = entity.Id;
-                        string curStr = null;
-                        while (!string.IsNullOrWhiteSpace(curStr = f.ReadLine()))
+                        using (var f = new StreamReader(dbFile))
                         {
-                            if (!curStr.Contains(id))
-                            {
-                                outStream.WriteLine(curStr);
-                            }
-                            else
-                            {
-                                result = true;
-                            }
-                        }
-                    }
-                    memoryStream.Position = 0;
-                    using (var outFile = new StreamWriter(dbFile))
-                    {
-                        using (var outReader = new StreamReader(memoryStream))
-                        {
+                            var id = entity.Id;
                             string curStr = null;
-                            while (!string.IsNullOrWhiteSpace(curStr = outReader.ReadLine()))
-                                outFile.WriteLine(curStr);
+                            while (!string.IsNullOrWhiteSpace(curStr = f.ReadLine()))
+                            {
+                                if (!curStr.Contains(id))
+                                {
+                                    outStream.WriteLine(curStr);
+                                }
+                                else
+                                {
+                                    result = true;
+                                }
+                            }
+                        }
+                        memoryStream.Position = 0;
+                        using (var outFile = new StreamWriter(dbFile))
+                        {
+                            using (var outReader = new StreamReader(memoryStream))
+                            {
+                                string curStr = null;
+                                while (!string.IsNullOrWhiteSpace(curStr = outReader.ReadLine()))
+                                    outFile.WriteLine(curStr);
+                            }
                         }
                     }
+
                 }
-                
+                return result;
             }
-            return result;
+            catch
+            {
+                return false;
+            }
         }
     }
 }
