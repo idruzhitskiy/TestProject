@@ -10,6 +10,7 @@ namespace Clusterizer.RemoteDatabases
 {
     public class FileRemoteDatabase : IRemoteDatabase
     {
+        private const string dbFile = "db.txt";
         private readonly IEntitiesFactory entitiesFactory;
 
         public FileRemoteDatabase(IEntitiesFactory entitiesFactory)
@@ -19,7 +20,7 @@ namespace Clusterizer.RemoteDatabases
 
         public bool AddEntity(IEntity entity)
         {
-            using (var f = new StreamWriter("db.txt"))
+            using (var f = new StreamWriter(dbFile))
             {
                 var str = entity.Id + "=" + string.Join(";", entity.TextAttributes.Select(l => string.Join(" ", l)));
                 f.WriteLine(str);
@@ -29,7 +30,7 @@ namespace Clusterizer.RemoteDatabases
 
         public IEntity FindEntity(List<List<string>> attributes)
         {
-            using (var f = new StreamReader("db.txt"))
+            using (var f = new StreamReader(dbFile))
             {
                 var str = string.Join(";", attributes.Select(l => string.Join(" ", l)));
                 string curStr = null;
@@ -56,7 +57,7 @@ namespace Clusterizer.RemoteDatabases
             {
                 using (var outStream = new StreamWriter(memoryStream))
                 {
-                    using (var f = new StreamReader("db.txt"))
+                    using (var f = new StreamReader(dbFile))
                     {
                         var id = entity.Id;
                         string curStr = null;
@@ -73,7 +74,7 @@ namespace Clusterizer.RemoteDatabases
                         }
                     }
                     memoryStream.Position = 0;
-                    using (var outFile = new StreamWriter("db.txt"))
+                    using (var outFile = new StreamWriter(dbFile))
                     {
                         using (var outReader = new StreamReader(memoryStream))
                         {
