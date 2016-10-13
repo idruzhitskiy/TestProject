@@ -33,6 +33,7 @@ namespace ClusterizerTests.SystemTests
                 return GetMethodName() + "_in3.txt";
             }
         }
+
         private string outputFile
         {
             get
@@ -57,6 +58,25 @@ namespace ClusterizerTests.SystemTests
 
             // assert
             Assert.IsTrue(reader.ReadToEnd().Contains("Использование:"));
+        }
+
+        [TestMethod]
+        public void TestDefaultArgument()
+        {
+            // arrange
+            MemoryStream memory = new MemoryStream();
+            TextWriter writer = new StreamWriter(memory);
+            TextReader reader = new StreamReader(memory);
+
+            // act
+            Console.SetOut(writer);
+            Clusterizer.Program.Main(new string[] { "-ff", firstInputFile, outputFile, "2" });
+
+            writer.Flush();
+            memory.Position = 0;
+
+            // assert
+            Assert.IsTrue(reader.ReadToEnd().Contains("Команда не найдена"));
         }
 
         [TestMethod]
@@ -247,6 +267,31 @@ namespace ClusterizerTests.SystemTests
             Console.SetOut(writer);
             Clusterizer.Program.Main(new string[] { "-clr" });
             Clusterizer.Program.Main(new string[] { "-db", outputFile, "3" });
+            writer.Flush();
+            memory.Position = 0;
+
+            // assert
+            Assert.IsTrue(reader.ReadToEnd().Contains("Ошибка кластеризации"));
+        }
+
+        [TestMethod]
+        public void TestRemoveFile()
+        {
+            // arrange
+            MemoryStream memory = new MemoryStream();
+            TextWriter writer = new StreamWriter(memory);
+            TextReader reader = new StreamReader(memory);
+            GenerateTestInputFiles(firstInputFile, secondInputFile, thirdInputFile);
+
+            // act
+            Console.SetOut(writer);
+
+            Clusterizer.Program.Main(new string[] { "-clr" });
+            Clusterizer.Program.Main(new string[] { "-add", firstInputFile });
+            Clusterizer.Program.Main(new string[] { "-rm", firstInputFile });
+            Clusterizer.Program.Main(new string[] { "-db", outputFile, "2" });
+            Clusterizer.Program.Main(new string[] { "-clr" });
+
             writer.Flush();
             memory.Position = 0;
 
