@@ -1,6 +1,7 @@
 ﻿using Clusterizer.EntitiesReaders;
 using Clusterizer.EntitiesWriters;
 using Clusterizer.RemoteDatabases;
+using Clusterizer.Clusterizers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ninject;
 using System;
@@ -15,6 +16,8 @@ namespace ClusterizerTests.IntegrationTests
     [TestClass]
     public class ID_IntegrationTests : BaseTest
     {
+        private const string inputFile = "in5.txt";
+
         [TestMethod]
         public void TestReaderDatabase()
         {
@@ -67,8 +70,46 @@ namespace ClusterizerTests.IntegrationTests
                     }
                 }
             }
+        }
+
+        [TestMethod]
+        public void ClusterizatorReader()
+        {
+            GenerateTestFile(inputFile);
+            kernel.Rebind<TextReader>().ToConstant(new StreamReader(inputFile));
+            var elements = kernel.Get<IEntitiesReader>().Entities;
+            var clusterizer = kernel.Get<IClusterizer>();          
+
+            // act
+            var clusters = clusterizer.Clusterize(elements, 2);
+
+            // assert
+            Assert.IsTrue(clusters.Count() == 2);
+            Assert.IsTrue(clusters[0].Contains(elements[0]));
+            Assert.IsTrue(clusters[1].Contains(elements[1])
+                            && clusters[1].Contains(elements[2])
+                            && clusters[1].Contains(elements[3]));
 
         }
+
+        [TestMethod]
+        public void ClusterizatorWriter()
+        {
+            // arrange
+            GenerateTestFile(inputFile);
+            kernel.Rebind<TextReader>().ToConstant(new StreamReader(inputFile));
+
+            // act
+            Clusterizer.Program.Main(new string[] { "-f", inputFile, "out_test1.txt", "2" });
+            TextReader reader = new StreamReader("out_test1.txt");
+
+            // assert 
+            Assert.IsTrue(reader.ReadLine() == "@Кластер 1");
+            Assert.IsTrue(reader.ReadLine() == "	#сущность 1");
+            Assert.IsTrue(reader.ReadLine() == "	-над Москвой было. ");
+            Assert.IsTrue(reader.ReadLine() == "	-пасмурное небо. ");
+        }
+
 
         private StreamReader GetStream()
         {
@@ -89,6 +130,25 @@ namespace ClusterizerTests.IntegrationTests
             f.Flush();
             memory.Position = 0;
             return new StreamReader(memory);
+        }
+
+        private void GenerateTestFile(string filename)
+        {
+            using (var f = new StreamWriter(filename, false))
+            {
+                f.WriteLine("#сущность");
+                f.WriteLine("-над Москвой было. ");
+                f.WriteLine("-пасмурное небо. ");
+                f.WriteLine("#сущность");
+                f.WriteLine("-в Москве было. ");
+                f.WriteLine("-холодно. ");
+                f.WriteLine("#сущность ");
+                f.WriteLine("-над Москвой летали. ");
+                f.WriteLine("-самолеты.");
+                f.WriteLine("#сущность");
+                f.WriteLine("-погоду в Москве обещали. ");
+                f.WriteLine("-хорошую.");
+            }
         }
     }
 }
