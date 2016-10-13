@@ -11,25 +11,75 @@ namespace ClusterizerTests.SystemTests
     [TestClass]
     public class ID_SystemTests
     {
+        private const string firstInputFile = "in1.txt";
+        private const string secondInputFile = "in2.txt";
+        private const string outputFile = "out.txt";
+
         [TestMethod]
-        public void Test1()
+        public void TestTwoFilesClusterizeThroughDb()
         {
-            GenerateTestInputFiles("in1.txt", "in2.txt");
+            // arrange
+            GenerateTestInputFiles(firstInputFile, secondInputFile);
+            List<List<string>> clusters = null;
 
-            Clusterizer.Program.Main(new string[] { "-add", "in1.txt" });
-            Clusterizer.Program.Main(new string[] { "-add", "in2.txt" });
-            Clusterizer.Program.Main(new string[] { "-db", "out.txt", "3" });
+            // act
             Clusterizer.Program.Main(new string[] { "-clr" });
-
-            using (var f = new StreamReader("out.txt"))
+            Clusterizer.Program.Main(new string[] { "-add", firstInputFile });
+            Clusterizer.Program.Main(new string[] { "-add", secondInputFile });
+            Clusterizer.Program.Main(new string[] { "-db", outputFile, "3" });
+            Clusterizer.Program.Main(new string[] { "-clr" });
+            using (var f = new StreamReader(outputFile))
             {
-                //var file = f.ReadToEnd();
-                //file.Split('@').
+                var file = f.ReadToEnd();
+                clusters = file.Split('@').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Split('#').ToList()).Skip(1).ToList();
             }
+
+            // assert
+            Assert.IsTrue(clusters.Count == 3);
+            Assert.IsTrue(clusters.Select(l => l.Count).Count(c => c == 0) == 0);
         }
 
+        [TestMethod]
+        public void TestOneFileClusterize()
+        {
+            // arrange
+            GenerateTestInputFiles(firstInputFile, secondInputFile);
+            List<List<string>> clusters = null;
 
-        private void GenerateTestInputFiles(string filename1 = "in1.txt", string filename2 = "in2.txt")
+            // act
+            Clusterizer.Program.Main(new string[] { "-f", firstInputFile, outputFile, "2" });
+            using (var f = new StreamReader(outputFile))
+            {
+                var file = f.ReadToEnd();
+                clusters = file.Split('@').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Split('#').ToList()).ToList();
+            }
+
+            // assert
+            Assert.IsTrue(clusters.Count == 2);
+            Assert.IsTrue(clusters.Select(l => l.Count).Count(c => c == 0) == 0);
+        }
+
+        [TestMethod]
+        public void TestEmptyDbClusterize()
+        {
+            // arrange
+            List<List<string>> clusters = null;
+            MemoryStream memory = new MemoryStream();
+            TextWriter writer = new StreamWriter(memory);
+            TextReader reader = new StreamReader(memory);
+
+            // act
+            Console.SetOut(writer);
+            Clusterizer.Program.Main(new string[] { "-clr" });
+            Clusterizer.Program.Main(new string[] { "-db", outputFile, "3" });
+            writer.Flush();
+            memory.Position = 0;
+
+            // assert
+            Assert.IsTrue(reader.ReadToEnd().Contains("Ошибка кластеризации"));
+        }
+
+        private void GenerateTestInputFiles(string filename1, string filename2)
         {
             using (var f = new StreamWriter(filename1, false))
             {
