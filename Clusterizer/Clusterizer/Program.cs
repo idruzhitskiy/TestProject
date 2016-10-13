@@ -36,7 +36,7 @@ namespace Clusterizer
             switch (args[0].Trim())
             {
                 case "-f":
-                    if (ArgsNumberValid(args,4))
+                    if (ArgsNumberValid(args, 4))
                     {
                         var in_filename = args[1];
                         var out_filename = args[2];
@@ -47,7 +47,14 @@ namespace Clusterizer
                         var clusterizer = kernel.Get<IClusterizer>();
                         var entitiesReader = kernel.Get<IEntitiesReader>();
 
-                        entitiesWriter.Write(clusterizer.Clusterize(entitiesReader.Entities, numOfClusters));
+                        try
+                        {
+                            entitiesWriter.Write(clusterizer.Clusterize(entitiesReader.Entities, numOfClusters));
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"Ошибка кластеризации: {e.Message}");
+                        }
                     }
                     break;
                 case "-db":
@@ -61,20 +68,34 @@ namespace Clusterizer
                         kernel.Rebind<IEntitiesReader>().To<FileRemoteDatabase>();
                         var clusterizer = kernel.Get<IClusterizer>();
 
-                        entitiesWriter.Write(clusterizer.Clusterize(remoteDatabase.FindAllEntitites(), numOfClusters));
+                        try
+                        {
+                            entitiesWriter.Write(clusterizer.Clusterize(remoteDatabase.FindAllEntitites(), numOfClusters));
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"Ошибка кластеризации: {e.Message}");
+                        }
                     }
                     break;
                 case "-add":
-                    if (ArgsNumberValid(args,2))
+                    if (ArgsNumberValid(args, 2))
                     {
                         var in_filename = args[1];
                         kernel.Rebind<TextReader>().ToConstant(new StreamReader(in_filename));
                         var remoteDatabase = kernel.Get<IRemoteDatabase>();
                         var entitiesReader = kernel.Get<IEntitiesReader>();
 
-                        foreach (var entity in entitiesReader.Entities)
+                        try
                         {
-                            remoteDatabase.AddEntity(entity);
+                            foreach (var entity in entitiesReader.Entities)
+                            {
+                                remoteDatabase.AddEntity(entity);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"Ошибка добавления: {e.Message}");
                         }
                     }
                     break;
@@ -86,14 +107,21 @@ namespace Clusterizer
                         var entitiesReader = kernel.Get<IEntitiesReader>();
                         var remoteDatabase = kernel.Get<IRemoteDatabase>();
 
-                        foreach (var entity in entitiesReader.Entities)
+                        try
                         {
-                            remoteDatabase.RemoveEntity(remoteDatabase.FindEntity(entity.TextAttributes));
+                            foreach (var entity in entitiesReader.Entities)
+                            {
+                                remoteDatabase.RemoveEntity(remoteDatabase.FindEntity(entity.TextAttributes));
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"Ошибка удаления: {e.Message}");
                         }
                     }
                     break;
                 case "-clr":
-                    if (ArgsNumberValid(args,1))
+                    if (ArgsNumberValid(args, 1))
                     {
                         kernel.Get<IRemoteDatabase>().DropDatabase();
                     }
