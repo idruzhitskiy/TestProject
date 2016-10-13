@@ -12,5 +12,9 @@ namespace Clusterizer.RemoteDatabases
         bool AddEntity(IEntity entity);
         bool RemoveEntity(IEntity entity);
         IEntity FindEntity(List<List<string>> attributes);
+
+        List<IEntity> FindAllEntitites();
+
+        void DropDatabase();
     }
 }
