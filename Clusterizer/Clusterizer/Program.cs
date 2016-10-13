@@ -13,9 +13,9 @@ using Clusterizer.RemoteDatabases;
 
 namespace Clusterizer
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             if (args.Count() < 1)
             {
@@ -33,7 +33,7 @@ namespace Clusterizer
             // Инициализация DI
             IKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
-            switch (args[0])
+            switch (args[0].Trim())
             {
                 case "-f":
                     if (ArgsNumberValid(args,4))
@@ -57,8 +57,9 @@ namespace Clusterizer
                         var numOfClusters = Convert.ToInt32(args[2]);
                         kernel.Rebind<TextWriter>().ToConstant(new StreamWriter(out_filename, false));
                         var entitiesWriter = kernel.Get<IEntitiesWriter>();
-                        var clusterizer = kernel.Get<IClusterizer>();
                         var remoteDatabase = kernel.Get<IRemoteDatabase>();
+                        kernel.Rebind<IEntitiesReader>().To<FileRemoteDatabase>();
+                        var clusterizer = kernel.Get<IClusterizer>();
 
                         entitiesWriter.Write(clusterizer.Clusterize(remoteDatabase.FindAllEntitites(), numOfClusters));
                     }

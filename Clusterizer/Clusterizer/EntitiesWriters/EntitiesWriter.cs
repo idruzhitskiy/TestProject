@@ -10,9 +10,9 @@ namespace Clusterizer.EntitiesWriters
 {
     public class EntitiesWriter : IEntitiesWriter
     {
-        private readonly StreamWriter textWriter;
+        private readonly TextWriter textWriter;
 
-        public EntitiesWriter(StreamWriter textWriter)
+        public EntitiesWriter(TextWriter textWriter)
         {
             this.textWriter = textWriter;            
         }
