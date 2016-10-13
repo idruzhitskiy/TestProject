@@ -275,7 +275,7 @@ namespace ClusterizerTests.SystemTests
         }
 
         [TestMethod]
-        public void TestRemoteFile()
+        public void TestRemoveFile()
         {
             // arrange
             MemoryStream memory = new MemoryStream();
