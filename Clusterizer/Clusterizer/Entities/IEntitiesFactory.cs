@@ -17,5 +17,7 @@ namespace Clusterizer.Entities
         /// <param name="attributes">Атрибуты</param>
         /// <returns>Сущность</returns>
         IEntity CreateEntity(List<List<string>> attributes);
+
+        IEntity CreateEntityWithId(List<List<string>> attributes, string id);
     }
 }

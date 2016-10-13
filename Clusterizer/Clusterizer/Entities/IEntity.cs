@@ -12,5 +12,6 @@ namespace Clusterizer.Entities
     public interface IEntity
     {
         List<List<string>> TextAttributes { get; }
+        string Id { get; }
     }
 }

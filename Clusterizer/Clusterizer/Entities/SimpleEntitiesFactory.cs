@@ -12,5 +12,10 @@ namespace Clusterizer.Entities
         {
             return new SimpleEntity(attributes);
         }
+
+        public IEntity CreateEntityWithId(List<List<string>> attributes, string id)
+        {
+            return new SimpleEntity(attributes, id);
+        }
     }
 }

@@ -57,17 +57,22 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
   <ItemGroup>
     <Compile Include="BaseTest.cs" />
+    <Compile Include="DistanceFunctionTests\DistanceFunctionTests.cs" />
     <Compile Include="EntitiesReaderTests\EntitiesReaderTests.cs" />
     <Compile Include="ClusterizerTests\ClusterizerTests.cs" />
     <Compile Include="EntitiesTests\EntitiesFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DistanceFunctionTests\DistanceFunctionTests.cs" />
+    <Compile Include="EntitiesWriterTests\EntitiesWriterTests.cs" />
+    <Compile Include="RemoteDatabaseTests\RemoteDatabeseTests.cs" />
+    <Compile Include="SystemTests\ID_SystemTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -78,6 +83,7 @@
       <Name>Clusterizer</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

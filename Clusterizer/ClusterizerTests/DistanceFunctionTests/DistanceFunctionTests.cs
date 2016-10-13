@@ -25,6 +25,48 @@ namespace ClusterizerTests
         }
 
         [TestMethod]
+        public void NullArgumentsTest()
+        {
+            // arrange
+            var entityNullException = false;
+            var listNullException = false;
+            var emptyListException = false;
+            var reader = InitializeReader(new List<IEntity>());
+            var distanceFunction = kernel.Get<IDistanceFunction>();
+
+            // act
+            try
+            {
+                distanceFunction.Distance(null, null);
+            }
+            catch (ArgumentNullException)
+            {
+                entityNullException = true;
+            }
+            try
+            {
+                distanceFunction.Centroid(null);
+            }
+            catch (ArgumentNullException)
+            {
+                listNullException = true;
+            }
+            try
+            {
+                distanceFunction.Centroid(new List<IEntity>());
+            }
+            catch (ArgumentException)
+            {
+                emptyListException = true;
+            }
+
+            // assert
+            Assert.IsTrue(entityNullException);
+            Assert.IsTrue(listNullException);
+            Assert.IsTrue(emptyListException);
+        }
+
+        [TestMethod]
         public void ArgumentsTest()
         {
             // arrange
