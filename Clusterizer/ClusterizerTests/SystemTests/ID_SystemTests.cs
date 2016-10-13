@@ -46,6 +46,42 @@ namespace ClusterizerTests.SystemTests
         }
 
         [TestMethod]
+        public void TestNoCommand()
+        {
+            // arrange
+            MemoryStream memory = new MemoryStream();
+            TextWriter writer = new StreamWriter(memory);
+            TextReader reader = new StreamReader(memory);
+
+            // act
+            Console.SetOut(writer);
+            Clusterizer.Program.Main(new string[] { "" });
+            writer.Flush();
+            memory.Position = 0;
+
+            // assert
+            Assert.IsTrue(reader.ReadToEnd().Contains("Команда не найдена"));
+        }
+
+        [TestMethod]
+        public void TestTooManyArguments()
+        {
+            // arrange
+            MemoryStream memory = new MemoryStream();
+            TextWriter writer = new StreamWriter(memory);
+            TextReader reader = new StreamReader(memory);
+
+            // act
+            Console.SetOut(writer);
+            Clusterizer.Program.Main(new string[] { "-f", "in.txt", "out.txt", "2", "100" });
+            writer.Flush();
+            memory.Position = 0;
+
+            // assert
+            Assert.IsTrue(reader.ReadToEnd().Contains("Ошибка количества аргументов"));
+        }
+
+        [TestMethod]
         public void TestOneFileClusterize()
         {
             // arrange
