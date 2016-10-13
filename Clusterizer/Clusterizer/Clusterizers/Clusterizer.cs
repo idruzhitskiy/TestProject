@@ -25,13 +25,16 @@ namespace Clusterizer.Clusterizers
             if (entities.Count < numOfClusters)
                 throw new ArgumentException("Количество кластеров больше, чем число элементов!");
 
+            if (entities.Count == numOfClusters)
+                return GetClusters(entities, numOfClusters);
+
             bool changed = true;
             bool success = true;
 
             List<int> clustering = InitializationClustering(entities.Count, numOfClusters, 0);
-            List<IEntity> means = InitializationMeans(numOfClusters, entities);
+            List<IEntity> means  = InitializationMeans(numOfClusters, entities);
 
-            int count = 10 * entities.Count;
+            int count       = 10 * entities.Count;
             int indexEntity = 0;
 
             while (changed && success && indexEntity < count)
@@ -47,13 +50,14 @@ namespace Clusterizer.Clusterizers
         private bool UpdateMeans(List<IEntity> entities, List<int> clustering, ref List<IEntity> means)
         {
             int numOfClusters = means.Count;
-            List<int> clusters = new List<int>(numOfClusters);
-            int count = entities.Count;
+            int numOfEntities = entities.Count;
 
-            for (int i = 0; i < count; i++)
+            List<int> clusters  = new List<int>(numOfClusters);
+
+            for (int i = 0; i < numOfEntities; i++)
                 clusters.Add(0);
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < numOfEntities; i++)
             {
                 int index = clustering[i];
                 ++clusters[index];
@@ -62,8 +66,6 @@ namespace Clusterizer.Clusterizers
             for (int i = 0; i < numOfClusters; i++)
                 if (clusters[i] == 0)
                     return false;
-
-            int numOfEntities = entities.Count;
          
             List<IEntity> newMeans = new List<IEntity>(numOfClusters);
 
@@ -87,10 +89,9 @@ namespace Clusterizer.Clusterizers
         {
             int numOfClusters = means.Count;
             int numOfEntities = entities.Count;
-            bool changed = false;
+            bool changed      = false;
 
-            List<int> newClustering = new List<int>(clustering.Count);
-            newClustering = clustering;
+            List<int> newClustering = new List<int>(clustering);
 
             for (int i = 0; i < numOfEntities; i++)
             {
@@ -112,7 +113,7 @@ namespace Clusterizer.Clusterizers
 
             List<int> clusters = new List<int>(numOfClusters);
 
-            for (int i = 0; i < numOfEntities; i++)
+            for (int i = 0; i < numOfClusters; i++)
                 clusters.Add(0);
 
             for (int i = 0; i < numOfEntities; i++)
@@ -133,7 +134,7 @@ namespace Clusterizer.Clusterizers
         private List<int> InitializationClustering(int numOfEntities, int numOfClusters, int seed)
         {
             List<int> clustering = new List<int>(numOfEntities);
-            Random random = new Random(seed);
+            Random random        = new Random(seed);
 
             for (int i = 0; i < numOfClusters; i++)
                 clustering.Add(i);
@@ -146,7 +147,6 @@ namespace Clusterizer.Clusterizers
 
         private List<IEntity> InitializationMeans(int numOfClusters, List<IEntity> entities)
         {
-            int numOfEntities = entities.Count;
             List<IEntity> means = new List<IEntity>(numOfClusters);
 
             for (int i = 0; i < numOfClusters; i++)
@@ -158,7 +158,7 @@ namespace Clusterizer.Clusterizers
         private List<List<IEntity>> GetClusters(List<IEntity> entities, List<int> clustering, int numOfClusters)
         {
             List<List<IEntity>> resultClusters = new List<List<IEntity>>(numOfClusters);
-            int count = clustering.Count;
+            int count                          = clustering.Count;
 
             for (int i = 0; i < numOfClusters; i++)
                 resultClusters.Add(new List<IEntity>());
@@ -169,10 +169,24 @@ namespace Clusterizer.Clusterizers
             return resultClusters;
         }
 
+        private List<List<IEntity>> GetClusters(List<IEntity> entities, int numOfClusters)
+        {
+            List<List<IEntity>> resultClusters = new List<List<IEntity>>(numOfClusters);
+
+            for (int i = 0; i < numOfClusters; i++)
+                resultClusters.Add(new List<IEntity>());
+
+            for (int i = 0; i < numOfClusters; i++)
+                resultClusters[i].Add(entities[i]);
+
+            return resultClusters;
+        }
+
+
         private int GetMinIndex(List<double> distance)
         {
             int numOfDistances = distance.Count;
-            int minIndex = 0;
+            int minIndex       = 0;
             double minDistance = distance[minIndex];
 
             for (int i = 0; i < numOfDistances; i++)

@@ -36,7 +36,7 @@ namespace ClusterizerTests.SystemTests
             using (var f = new StreamReader(outputFile))
             {
                 var file = f.ReadToEnd();
-                clusters = file.Split('@').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Split('#').ToList()).Skip(1).ToList();
+                clusters = file.Split('@').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Split('#').ToList()).ToList();
             }
 
             // assert

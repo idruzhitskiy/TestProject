@@ -27,8 +27,17 @@ namespace ClusterizerTests.ClusterizerTests
             var twoElements = new List<IEntity> { CreateEntity(new[] { new[] { "1" } }), CreateEntity(new[] { new[] { "2" } }) };
             bool exceptionOnZeroClusters = false;
             bool exceptionOnEmptyList = false;
+            bool exceptionOnNegativeClusters = false;
 
             // act
+            try
+            {
+                var temp = clusterizer.Clusterize(twoElements, -5);
+            }
+            catch
+            {
+                exceptionOnNegativeClusters = true;
+            }
             try
             {
                 var temp = clusterizer.Clusterize(twoElements, 0);
@@ -49,6 +58,7 @@ namespace ClusterizerTests.ClusterizerTests
             var twoClusters = clusterizer.Clusterize(twoElements, 2);
 
             // assert
+            Assert.IsTrue(exceptionOnNegativeClusters);
             Assert.IsTrue(exceptionOnZeroClusters);
             Assert.IsTrue(exceptionOnEmptyList);
             Assert.IsTrue(oneElementOneCluster.Count == 1);
@@ -124,6 +134,65 @@ namespace ClusterizerTests.ClusterizerTests
                 && clusters[2].Contains(elements[4]));
             Assert.IsTrue(clusters[1].Contains(elements[5])
                 && clusters[1].Contains(elements[6]));
+        }
+
+        [TestMethod]
+        public void TestClusterizationWithSameNumberOfElements()
+        {
+            // arrange
+            InitializeDistanceFunction(
+                (e1, e2) => Math.Abs(e1.TextAttributes[0].Count - e2.TextAttributes[0].Count) / (double)(e1.TextAttributes[0].Count + e2.TextAttributes[0].Count),
+                l => CreateEntity(new List<List<string>>
+                {
+                    l.SelectMany(e => e.TextAttributes[0]).Take(l.SelectMany(e => e.TextAttributes[0]).Count() / l.Count).ToList()
+                }));
+            var clusterizer = kernel.Get<IClusterizer>();
+            var elements = new List<IEntity> {
+                CreateEntity(new[] { new[] { "а"} }),
+                CreateEntity(new[] { new[] { "б", "в"} }),
+                CreateEntity(new[] { new[] { "г" } })
+            };
+
+            // act
+            var clusters = clusterizer.Clusterize(elements, 3);
+
+            // assert
+            Assert.IsTrue(clusters[0].Contains(elements[0]));
+            Assert.IsTrue(clusters[1].Contains(elements[1]));
+            Assert.IsTrue(clusters[2].Contains(elements[2]));
+        }
+
+        [TestMethod]
+        public void TestClusterizationNumberOfClustersMoreThenNumberOfElements()
+        {
+            // arrange
+            InitializeDistanceFunction(
+                (e1, e2) => Math.Abs(e1.TextAttributes[0].Count - e2.TextAttributes[0].Count) / (double)(e1.TextAttributes[0].Count + e2.TextAttributes[0].Count),
+                l => CreateEntity(new List<List<string>>
+                {
+                    l.SelectMany(e => e.TextAttributes[0]).Take(l.SelectMany(e => e.TextAttributes[0]).Count() / l.Count).ToList()
+                }));
+            var clusterizer = kernel.Get<IClusterizer>();
+            var elements = new List<IEntity> {
+                CreateEntity(new[] { new[] { "а"} }),
+                CreateEntity(new[] { new[] { "б", "в"} }),
+                CreateEntity(new[] { new[] { "г" } })
+            };
+            bool exceptionOnNumberOfClustersMoreThenNumberOfElements = false;
+
+            // act
+            try
+            {
+                var clusters = clusterizer.Clusterize(elements, 5);
+            }
+            catch
+            {
+                exceptionOnNumberOfClustersMoreThenNumberOfElements = true;
+            }
+
+
+            // assert
+            Assert.IsTrue(exceptionOnNumberOfClustersMoreThenNumberOfElements);
         }
 
         private void InitializeDistanceFunction(Func<IEntity, IEntity, double> dist, Func<List<IEntity>, IEntity> centr)
