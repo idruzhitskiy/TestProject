@@ -63,6 +63,7 @@
     <Compile Include="EntitiesReaders\IEntitiesReader.cs" />
     <Compile Include="DistanceFunctions\DistanceFunction.cs" />
     <Compile Include="RemoteDatabases\FileRemoteDatabase.cs" />
+    <Compile Include="RemoteDatabases\IEntititesReader.cs" />
     <Compile Include="RemoteDatabases\IRemoteDatabase.cs" />
   </ItemGroup>
   <ItemGroup>
