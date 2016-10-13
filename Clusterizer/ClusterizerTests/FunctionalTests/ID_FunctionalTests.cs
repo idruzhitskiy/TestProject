@@ -65,16 +65,12 @@ namespace ClusterizerTests.FunctionalTests
            
             // act
             var clusters = clusterizer.Clusterize(elements, 2);
-            kernel.Rebind<TextWriter>().ToConstant(new StreamWriter("out_filename.txt", false));
-            var entitiesWriter = kernel.Get<IEntitiesWriter>();
-            entitiesWriter.Write(clusters);
 
-            // assert            
-            int i = 0;
-            Assert.IsTrue(clusters[i].Contains(elements[0]));
-            Assert.IsTrue(clusters[1 - i].Contains(elements[1])
-                            && clusters[1 - i].Contains(elements[2])
-                            && clusters[1 - i].Contains(elements[3]));
+            // assert 
+            Assert.IsTrue(clusters[0].Contains(elements[0]));
+            Assert.IsTrue(clusters[1].Contains(elements[1])
+                            && clusters[1].Contains(elements[2])
+                            && clusters[1].Contains(elements[3]));
 
         }
 
