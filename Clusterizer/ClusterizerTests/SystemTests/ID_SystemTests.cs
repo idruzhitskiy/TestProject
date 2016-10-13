@@ -13,12 +13,13 @@ namespace ClusterizerTests.SystemTests
     {
         private const string firstInputFile = "in1.txt";
         private const string secondInputFile = "in2.txt";
+        private const string thirdInputFile = "in3.txt";
         private const string outputFile = "out.txt";
 
         [TestInitialize]
         public void Initialize()
         {
-            GenerateTestInputFiles(firstInputFile, secondInputFile);
+            GenerateTestInputFiles(firstInputFile, secondInputFile, thirdInputFile);
         }
 
         [TestMethod]
@@ -61,6 +62,98 @@ namespace ClusterizerTests.SystemTests
             // assert
             Assert.IsTrue(clusters.Count == 2);
             Assert.IsTrue(clusters.Select(l => l.Count).Count(c => c == 0) == 0);
+            Assert.IsTrue(clusters[0][1].Contains("над Москвой было"));
+            Assert.IsTrue(
+                clusters[1][1].Contains("в Москве было") &&
+                clusters[1][2].Contains("над Москвой летали") &&
+                clusters[1][3].Contains("погоду в Москве обещали")
+                );
+        }
+
+        [TestMethod]
+        public void TestClusterizer()
+        {
+            // arrange
+            List<List<string>> clusters = null;
+
+            // act
+            Clusterizer.Program.Main(new string[] { "-f", thirdInputFile, outputFile, "2" });
+            using (var f = new StreamReader(outputFile))
+            {
+                var file = f.ReadToEnd();
+                clusters = file.Split('@').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Split('#').ToList()).ToList();
+            }
+
+            // assert
+            Assert.IsTrue(clusters.Count == 2);
+            Assert.IsTrue(clusters.Select(l => l.Count).Count(c => c == 0) == 0);
+            Assert.IsTrue(
+                clusters[0][1].Contains("черный кот") &&
+                clusters[0][2].Contains("черный код")
+                );
+            Assert.IsTrue(
+                clusters[1][1].Contains("серая мышь")
+                );
+        }
+
+        [TestMethod]
+        public void TestSameNumberElementsAndClusters()
+        {
+            // arrange
+            List<List<string>> clusters = null;
+
+            // act
+            Clusterizer.Program.Main(new string[] { "-f", secondInputFile, outputFile, "3" });
+            using (var f = new StreamReader(outputFile))
+            {
+                var file = f.ReadToEnd();
+                clusters = file.Split('@').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Split('#').ToList()).ToList();
+            }
+
+            // assert
+            Assert.IsTrue(clusters.Count == 3);
+            Assert.IsTrue(clusters.Select(l => l.Count).Count(c => c == 0) == 0);
+            Assert.IsTrue(clusters[0][1].Contains("над Питером было"));
+            Assert.IsTrue(clusters[1][1].Contains("в Питере было"));
+            Assert.IsTrue(clusters[2][1].Contains("погоду в Питере обещали"));
+        }
+
+        [TestMethod]
+        public void TestNegativeNumberOfClusters()
+        {
+            // arrange
+            MemoryStream memory = new MemoryStream();
+            TextWriter writer = new StreamWriter(memory);
+            TextReader reader = new StreamReader(memory);
+
+            // act
+            Console.SetOut(writer);
+            Clusterizer.Program.Main(new string[] { "-f", firstInputFile, outputFile, "-5" });
+
+            writer.Flush();
+            memory.Position = 0;
+
+            // assert
+            Assert.IsTrue(reader.ReadToEnd().Contains("Ошибка кластеризации"));
+        }
+
+        [TestMethod]
+        public void TestClusterNumberMoreThanEntitiesNumber()
+        {
+            // arrange
+            MemoryStream memory = new MemoryStream();
+            TextWriter writer = new StreamWriter(memory);
+            TextReader reader = new StreamReader(memory);
+
+            // act
+            Console.SetOut(writer);
+            Clusterizer.Program.Main(new string[] { "-f", secondInputFile, outputFile, "4" });
+
+            writer.Flush();
+            memory.Position = 0;
+
+            // assert
+            Assert.IsTrue(reader.ReadToEnd().Contains("Ошибка кластеризации"));
         }
 
         [TestMethod]
@@ -77,12 +170,12 @@ namespace ClusterizerTests.SystemTests
             Clusterizer.Program.Main(new string[] { "-db", outputFile, "3" });
             writer.Flush();
             memory.Position = 0;
-
+           
             // assert
             Assert.IsTrue(reader.ReadToEnd().Contains("Ошибка кластеризации"));
         }
 
-        private void GenerateTestInputFiles(string filename1, string filename2)
+        private void GenerateTestInputFiles(string filename1, string filename2, string filename3)
         {
             using (var f = new StreamWriter(filename1, false))
             {
@@ -111,6 +204,16 @@ namespace ClusterizerTests.SystemTests
                 f.WriteLine("#сущность");
                 f.WriteLine("-погоду в Питере обещали. ");
                 f.WriteLine("-хорошую.");
+            }
+
+            using (var f = new StreamWriter(filename3, false))
+            {
+                f.WriteLine("#сущность");
+                f.WriteLine("-черный кот. ");
+                f.WriteLine("#сущность");
+                f.WriteLine("-серая мышь. ");
+                f.WriteLine("#сущность");
+                f.WriteLine("-черный код. ");
             }
         }
     }
