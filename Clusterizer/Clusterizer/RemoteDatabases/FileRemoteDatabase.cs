@@ -9,7 +9,7 @@ using Clusterizer.EntitiesReaders;
 
 namespace Clusterizer.RemoteDatabases
 {
-    public class FileRemoteDatabase : IRemoteDatabase, IEntitiesReader
+    public class FileRemoteDatabase : IRemoteDatabase
     {
         private const string dbFile = "db.txt";
         private readonly IEntitiesFactory entitiesFactory;
@@ -23,7 +23,31 @@ namespace Clusterizer.RemoteDatabases
         {
             get
             {
-                return FindAllEntitites();
+                try
+                {
+                    using (var f = new StreamReader(dbFile))
+                    {
+                        var result = new List<IEntity>();
+                        string curStr = null;
+                        while (!string.IsNullOrWhiteSpace(curStr = f.ReadLine()))
+                        {
+                            if (curStr.Split(new char[] { '=' }).Count() == 2)
+                            {
+                                result.Add(entitiesFactory.CreateEntityWithId(
+                                    curStr.Split(new char[] { '=' })[1]
+                                        .Split(new char[] { ';' })
+                                        .Select(s => s.Split(new char[] { ' ' }).ToList())
+                                        .ToList(),
+                                    curStr.Split(new char[] { '=' })[0]));
+                            }
+                        }
+                        return result;
+                    }
+                }
+                catch
+                {
+                    return new List<IEntity>();
+                }
             }
         }
 
@@ -47,35 +71,6 @@ namespace Clusterizer.RemoteDatabases
         public void DropDatabase()
         {
             new StreamWriter(dbFile, false).Close();
-        }
-
-        public List<IEntity> FindAllEntitites()
-        {
-            try
-            {
-                using (var f = new StreamReader(dbFile))
-                {
-                    var result = new List<IEntity>();
-                    string curStr = null;
-                    while (!string.IsNullOrWhiteSpace(curStr = f.ReadLine()))
-                    {
-                        if (curStr.Split(new char[] { '=' }).Count()==2)
-                        {
-                            result.Add(entitiesFactory.CreateEntityWithId(
-                                curStr.Split(new char[] { '=' })[1]
-                                    .Split(new char[] { ';' })
-                                    .Select(s => s.Split(new char[] { ' ' }).ToList())
-                                    .ToList(),
-                                curStr.Split(new char[] { '=' })[0]));
-                        }
-                    }
-                    return result;
-                }
-            }
-            catch
-            {
-                return new List<IEntity>();
-            }
         }
 
         public IEntity FindEntity(List<List<string>> attributes)

@@ -70,7 +70,7 @@ namespace Clusterizer
 
                         try
                         {
-                            entitiesWriter.Write(clusterizer.Clusterize(remoteDatabase.FindAllEntitites(), numOfClusters));
+                            entitiesWriter.Write(clusterizer.Clusterize(remoteDatabase.Entities, numOfClusters));
                         }
                         catch (Exception e)
                         {
