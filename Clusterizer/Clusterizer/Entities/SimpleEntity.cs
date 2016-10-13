@@ -8,18 +8,28 @@ namespace Clusterizer.Entities
 {
     public class SimpleEntity : IEntity
     {
-        private readonly List<List<string>> testAttributes;
+        private readonly List<List<string>> textAttributes;
+        private readonly string id;
 
-        public SimpleEntity(List<List<string>> attributes)
+        public SimpleEntity(List<List<string>> attributes, string id = null)
         {
-            this.testAttributes = attributes;
+            this.textAttributes = attributes;
+            this.id = id ?? Guid.NewGuid().ToString();
+        }
+
+        public string Id
+        {
+            get
+            {
+                return id;
+            }
         }
 
         public List<List<string>> TextAttributes
         {
             get
             {
-                return testAttributes;
+                return textAttributes;
             }
         }
     }
