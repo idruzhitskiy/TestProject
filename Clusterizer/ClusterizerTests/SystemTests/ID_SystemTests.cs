@@ -63,7 +63,6 @@ namespace ClusterizerTests.SystemTests
         public void TestEmptyDbClusterize()
         {
             // arrange
-            List<List<string>> clusters = null;
             MemoryStream memory = new MemoryStream();
             TextWriter writer = new StreamWriter(memory);
             TextReader reader = new StreamReader(memory);
