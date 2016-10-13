@@ -42,6 +42,24 @@ namespace ClusterizerTests.SystemTests
         }
 
         [TestMethod]
+        public void TestNoArguments()
+        {
+            // arrange
+            MemoryStream memory = new MemoryStream();
+            TextWriter writer = new StreamWriter(memory);
+            TextReader reader = new StreamReader(memory);
+
+            // act
+            Console.SetOut(writer);
+            Clusterizer.Program.Main(new List<string>().ToArray());
+            writer.Flush();
+            memory.Position = 0;
+
+            // assert
+            Assert.IsTrue(reader.ReadToEnd().Contains("Использование:"));
+        }
+
+        [TestMethod]
         public void TestTwoFilesClusterizeThroughDb()
         {
             // arrange

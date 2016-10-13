@@ -10,13 +10,20 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace ClusterizerTests.IntegrationTests
 {
     [TestClass]
     public class ID_IntegrationTests : BaseTest
     {
-        private const string inputFile = "in5.txt";
+        private string inputFile
+        {
+            get
+            {
+                return GetMethodName() + "_in.txt";
+            }
+        }
 
         [TestMethod]
         public void TestReaderDatabase()
@@ -149,6 +156,12 @@ namespace ClusterizerTests.IntegrationTests
                 f.WriteLine("-погоду в Москве обещали. ");
                 f.WriteLine("-хорошую.");
             }
+        }
+
+        private string GetMethodName()
+        {
+            var st = new StackTrace(new StackFrame(2));
+            return st.GetFrame(0).GetMethod().Name;
         }
     }
 }

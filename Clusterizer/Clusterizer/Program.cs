@@ -25,8 +25,6 @@ namespace Clusterizer
                 Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} -add filename");
                 Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} -rm filename");
                 Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} -clr");
-                Console.WriteLine("Для выхода нажмите любую клавишу...");
-                Console.ReadKey();
                 return;
             }
 

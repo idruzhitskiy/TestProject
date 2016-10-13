@@ -24,7 +24,6 @@ namespace Clusterizer.RemoteDatabases
             catch
             {
                 new StreamWriter(dbFile, false).Close();
-
             }
         }
 
