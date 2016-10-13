@@ -51,6 +51,7 @@ namespace Clusterizer.EntitiesReaders
                             entityStrings = new List<string>();
                         }
                     }
+                    textReader.Close();
                 }
                 return entities;
             }

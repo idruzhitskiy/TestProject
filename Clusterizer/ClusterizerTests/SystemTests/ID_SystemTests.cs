@@ -15,11 +15,16 @@ namespace ClusterizerTests.SystemTests
         private const string secondInputFile = "in2.txt";
         private const string outputFile = "out.txt";
 
+        [TestInitialize]
+        public void Initialize()
+        {
+            GenerateTestInputFiles(firstInputFile, secondInputFile);
+        }
+
         [TestMethod]
         public void TestTwoFilesClusterizeThroughDb()
         {
             // arrange
-            GenerateTestInputFiles(firstInputFile, secondInputFile);
             List<List<string>> clusters = null;
 
             // act
@@ -43,7 +48,6 @@ namespace ClusterizerTests.SystemTests
         public void TestOneFileClusterize()
         {
             // arrange
-            GenerateTestInputFiles(firstInputFile, secondInputFile);
             List<List<string>> clusters = null;
 
             // act
