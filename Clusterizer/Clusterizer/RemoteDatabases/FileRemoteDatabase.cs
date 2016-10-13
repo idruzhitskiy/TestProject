@@ -5,10 +5,11 @@ using System.IO;
 using System.Threading.Tasks;
 using Clusterizer.Entities;
 using System.Text;
+using Clusterizer.EntitiesReaders;
 
 namespace Clusterizer.RemoteDatabases
 {
-    public class FileRemoteDatabase : IRemoteDatabase
+    public class FileRemoteDatabase : IRemoteDatabase, IEntitiesReader
     {
         private const string dbFile = "db.txt";
         private readonly IEntitiesFactory entitiesFactory;
@@ -16,6 +17,14 @@ namespace Clusterizer.RemoteDatabases
         public FileRemoteDatabase(IEntitiesFactory entitiesFactory)
         {
             this.entitiesFactory = entitiesFactory;
+        }
+
+        public List<IEntity> Entities
+        {
+            get
+            {
+                return FindAllEntitites();
+            }
         }
 
         public bool AddEntity(IEntity entity)

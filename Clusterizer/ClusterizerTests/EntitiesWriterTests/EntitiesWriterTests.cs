@@ -19,8 +19,8 @@ namespace ClusterizerTests.WriterTests
             //arrange             
             var clusters = new List<List<IEntity>> { };
 
-            var writer = new EntitiesWriter(new System.IO.StringWriter());
-            writer.Write(clusters);
+            //var writer = new EntitiesWriter(new System.IO.StreamWriter());
+            //writer.Write(clusters);
             
             //sets
         }
@@ -32,8 +32,8 @@ namespace ClusterizerTests.WriterTests
             var clusters = new List<List<IEntity>> { new List<IEntity> { CreateEntity(new[] { new[] { "a1" } }),
                                                                          CreateEntity(new[] { new[] { "a2" } })  },
                                                      new List<IEntity> { CreateEntity(new[] { new[] { "b1", "b2"} }) } };
-            var writer = new EntitiesWriter(new System.IO.StringWriter());
-            writer.Write(clusters);
+            //var writer = new EntitiesWriter(new System.IO.StringWriter());
+            //writer.Write(clusters);
 
             //sets           
         }
