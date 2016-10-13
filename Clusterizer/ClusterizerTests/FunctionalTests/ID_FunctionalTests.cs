@@ -1,4 +1,6 @@
 ﻿using Clusterizer.EntitiesReaders;
+using Clusterizer.Clusterizers;
+using Clusterizer.EntitiesWriters;
 using Clusterizer.RemoteDatabases;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ninject;
@@ -51,6 +53,57 @@ namespace ClusterizerTests.FunctionalTests
 
             // assert
             Assert.IsTrue(entities.Count > 0 && entitiesFromDb.Count < 0);
+        }
+
+        [TestMethod]
+        public void ClusterizeTest()
+        {
+            GenerateTestFile(inputFile);
+            kernel.Rebind<TextReader>().ToConstant(new StreamReader(inputFile));
+            var elements = kernel.Get<IEntitiesReader>().Entities;
+            var clusterizer = kernel.Get<IClusterizer>();
+           
+            // act
+            var clusters = clusterizer.Clusterize(elements, 2);
+            kernel.Rebind<TextWriter>().ToConstant(new StreamWriter("out_filename.txt", false));
+            var entitiesWriter = kernel.Get<IEntitiesWriter>();
+            entitiesWriter.Write(clusters);
+
+            // assert            
+            int i = 0;
+            Assert.IsTrue(clusters[i].Contains(elements[0]));
+            Assert.IsTrue(clusters[1 - i].Contains(elements[1])
+                            && clusters[1 - i].Contains(elements[2])
+                            && clusters[1 - i].Contains(elements[3]));
+
+        }
+
+        [TestMethod]
+        public void WriterTest()
+        {
+            // arrange
+            GenerateTestFile(inputFile);
+            kernel.Rebind<TextReader>().ToConstant(new StreamReader(inputFile));
+
+            // act
+            Clusterizer.Program.Main(new string[] { "-f", inputFile, "out_test.txt", "2" });                            
+            TextReader reader = new StreamReader("out_test.txt");
+
+            // assert 
+            Assert.IsTrue(reader.ReadLine() == "@Кластер 1");
+            Assert.IsTrue(reader.ReadLine() == "	#сущность 1");
+            Assert.IsTrue(reader.ReadLine() == "	-над Москвой было. ");
+            Assert.IsTrue(reader.ReadLine() == "	-пасмурное небо. ");
+            Assert.IsTrue(reader.ReadLine() == "@Кластер 2");
+            Assert.IsTrue(reader.ReadLine() == "	#сущность 1");
+            Assert.IsTrue(reader.ReadLine() == "	-в Москве было. ");
+            Assert.IsTrue(reader.ReadLine() == "	-холодно. ");
+            Assert.IsTrue(reader.ReadLine() == "	#сущность 2");
+            Assert.IsTrue(reader.ReadLine() == "	-над Москвой летали. ");
+            Assert.IsTrue(reader.ReadLine() == "	-самолеты. ");
+            Assert.IsTrue(reader.ReadLine() == "	#сущность 3");
+            Assert.IsTrue(reader.ReadLine() == "	-погоду в Москве обещали. ");
+            Assert.IsTrue(reader.ReadLine() == "	-хорошую. ");
         }
 
         private void GenerateTestFile(string filename)
