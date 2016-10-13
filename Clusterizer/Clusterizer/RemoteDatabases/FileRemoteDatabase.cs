@@ -17,6 +17,14 @@ namespace Clusterizer.RemoteDatabases
         public FileRemoteDatabase(IEntitiesFactory entitiesFactory)
         {
             this.entitiesFactory = entitiesFactory;
+            try
+            {
+                new StreamReader(dbFile).Close();
+            }
+            catch
+            {
+                new StreamWriter(dbFile, false).Close();
+            }
         }
 
         public List<IEntity> Entities
@@ -127,10 +135,10 @@ namespace Clusterizer.RemoteDatabases
                                 }
                             }
                         }
-                        memoryStream.Position = 0;
+                        outStream.Flush();
                         using (var outFile = new StreamWriter(dbFile))
                         {
-                            using (var outReader = new StreamReader(memoryStream))
+                            using (var outReader = new StreamReader(new MemoryStream(memoryStream.ToArray())))
                             {
                                 string curStr = null;
                                 while (!string.IsNullOrWhiteSpace(curStr = outReader.ReadLine()))

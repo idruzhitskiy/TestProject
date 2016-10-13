@@ -19,6 +19,7 @@ namespace ClusterizerTests.RemoteDatabaseTests
         {
             base.Initialize();
             InitializeSimpleEntitiesFactory();
+            kernel.Get<IRemoteDatabase>().DropDatabase();
         }
 
         [TestMethod]
@@ -80,6 +81,42 @@ namespace ClusterizerTests.RemoteDatabaseTests
 
             // assert
             Assert.IsTrue(emptyEntitiesList.Count == 0);
+        }
+
+        [TestMethod]
+        public void RemoveOneEntity()
+        {
+            // arrange
+            var remoteDatabase = kernel.Get<IRemoteDatabase>();
+            var factory = kernel.Get<IEntitiesFactory>();
+            var entity1 = factory.CreateEntity(new List<List<string>> { new List<string> { "1", "2" } });
+            var entity2 = factory.CreateEntity(new List<List<string>> { new List<string> { "3", "4" } });
+            var entity3 = factory.CreateEntity(new List<List<string>> { new List<string> { "5", "6" } });
+
+            // act
+            remoteDatabase.AddEntity(entity1);
+            remoteDatabase.AddEntity(entity2);
+            remoteDatabase.AddEntity(entity3);
+            remoteDatabase.RemoveEntity(entity1);
+            var twoEntities = remoteDatabase.Entities;
+
+            // assert
+            Assert.IsTrue(twoEntities.Count == 2);
+            Assert.IsTrue(twoEntities.Select(e => e.Id).Contains(entity2.Id));
+            Assert.IsTrue(twoEntities.Select(e => e.Id).Contains(entity3.Id));
+        }
+
+        [TestMethod]
+        public void EmptyEntitiesList()
+        {
+            // arrange
+            var remoteDatabase = kernel.Get<IRemoteDatabase>();
+
+            // act
+            var entities = remoteDatabase.Entities;
+
+            // assert
+            Assert.IsTrue(entities.Count == 0);
         }
 
         private void InitializeSimpleEntitiesFactory()
