@@ -3,7 +3,6 @@ using Moq;
 using Ninject;
 using Clusterizer.Entities;
 using System.Collections.Generic;
-using System;
 using System.Linq;
 using Clusterizer.EntitiesWriters;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

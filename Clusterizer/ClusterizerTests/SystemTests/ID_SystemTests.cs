@@ -14,15 +14,22 @@ namespace ClusterizerTests.SystemTests
         [TestMethod]
         public void Test1()
         {
-            GenerateTestInputFile("in1.txt", "in2.txt");
+            GenerateTestInputFiles("in1.txt", "in2.txt");
+
             Clusterizer.Program.Main(new string[] { "-add", "in1.txt" });
             Clusterizer.Program.Main(new string[] { "-add", "in2.txt" });
-            Clusterizer.Program.Main(new string[] { "-db", "out.txt", "4" });
+            Clusterizer.Program.Main(new string[] { "-db", "out.txt", "3" });
             Clusterizer.Program.Main(new string[] { "-clr" });
+
+            using (var f = new StreamReader("out.txt"))
+            {
+                //var file = f.ReadToEnd();
+                //file.Split('@').
+            }
         }
 
 
-        private void GenerateTestInputFile(string filename1 = "in1.txt", string filename2 = "in2.txt")
+        private void GenerateTestInputFiles(string filename1 = "in1.txt", string filename2 = "in2.txt")
         {
             using (var f = new StreamWriter(filename1, false))
             {
