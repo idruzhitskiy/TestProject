@@ -10,13 +10,20 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace ClusterizerTests.FunctionalTests
 {
     [TestClass]
     public class ID_FunctionalTests : BaseTest
     {
-        private const string inputFile = "in1.txt";
+        private string inputFile
+        {
+            get
+            {
+                return GetMethodName() + "_in.txt";
+            }
+        }
 
         [TestMethod]
         public void TestDbAdd()
@@ -38,6 +45,7 @@ namespace ClusterizerTests.FunctionalTests
                     .Contains(entity.TextAttributes.SelectMany(l => l).Aggregate(string.Concat)));
         }
 
+        [TestMethod]
         public void TestDbRemove()
         {
             // arrange
@@ -52,7 +60,7 @@ namespace ClusterizerTests.FunctionalTests
             var entitiesFromDb = kernel.Get<IRemoteDatabase>().Entities;
 
             // assert
-            Assert.IsTrue(entities.Count > 0 && entitiesFromDb.Count < 0);
+            Assert.IsTrue(entities.Count > 0 && entitiesFromDb.Count == 0);
         }
 
         [TestMethod]
@@ -119,6 +127,12 @@ namespace ClusterizerTests.FunctionalTests
                 f.WriteLine("-погоду в Москве обещали. ");
                 f.WriteLine("-хорошую.");
             }
+        }
+
+        private string GetMethodName()
+        {
+            var st = new StackTrace(new StackFrame(2));
+            return st.GetFrame(0).GetMethod().Name;
         }
     }
 }

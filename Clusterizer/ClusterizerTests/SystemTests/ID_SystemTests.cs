@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,15 +12,33 @@ namespace ClusterizerTests.SystemTests
     [TestClass]
     public class ID_SystemTests
     {
-        private const string firstInputFile = "in1.txt";
-        private const string secondInputFile = "in2.txt";
-        private const string thirdInputFile = "in3.txt";
-        private const string outputFile = "out.txt";
-
-        [TestInitialize]
-        public void Initialize()
+        private string firstInputFile
         {
-            GenerateTestInputFiles(firstInputFile, secondInputFile, thirdInputFile);
+            get
+            {
+                return GetMethodName() + "_in1.txt";
+            }
+        }
+        private string secondInputFile
+        {
+            get
+            {
+                return GetMethodName() + "_in2.txt";
+            }
+        }
+        private string thirdInputFile
+        {
+            get
+            {
+                return GetMethodName() + "_in3.txt";
+            }
+        }
+        private string outputFile
+        {
+            get
+            {
+                return GetMethodName() + "_out.txt";
+            }
         }
 
         [TestMethod]
@@ -27,6 +46,7 @@ namespace ClusterizerTests.SystemTests
         {
             // arrange
             List<List<string>> clusters = null;
+            GenerateTestInputFiles(firstInputFile, secondInputFile, thirdInputFile);
 
             // act
             Clusterizer.Program.Main(new string[] { "-clr" });
@@ -73,7 +93,7 @@ namespace ClusterizerTests.SystemTests
 
             // act
             Console.SetOut(writer);
-            Clusterizer.Program.Main(new string[] { "-f", "in.txt", "out.txt", "2", "100" });
+            Clusterizer.Program.Main(new string[] { "-f", "in.txt", outputFile, "2", "100" });
             writer.Flush();
             memory.Position = 0;
 
@@ -86,6 +106,7 @@ namespace ClusterizerTests.SystemTests
         {
             // arrange
             List<List<string>> clusters = null;
+            GenerateTestInputFiles(firstInputFile, secondInputFile, thirdInputFile);
 
             // act
             Clusterizer.Program.Main(new string[] { "-f", firstInputFile, outputFile, "2" });
@@ -111,6 +132,7 @@ namespace ClusterizerTests.SystemTests
         {
             // arrange
             List<List<string>> clusters = null;
+            GenerateTestInputFiles(firstInputFile, secondInputFile, thirdInputFile);
 
             // act
             Clusterizer.Program.Main(new string[] { "-f", thirdInputFile, outputFile, "2" });
@@ -137,6 +159,7 @@ namespace ClusterizerTests.SystemTests
         {
             // arrange
             List<List<string>> clusters = null;
+            GenerateTestInputFiles(firstInputFile, secondInputFile, thirdInputFile);
 
             // act
             Clusterizer.Program.Main(new string[] { "-f", secondInputFile, outputFile, "3" });
@@ -161,6 +184,7 @@ namespace ClusterizerTests.SystemTests
             MemoryStream memory = new MemoryStream();
             TextWriter writer = new StreamWriter(memory);
             TextReader reader = new StreamReader(memory);
+            GenerateTestInputFiles(firstInputFile, secondInputFile, thirdInputFile);
 
             // act
             Console.SetOut(writer);
@@ -180,6 +204,7 @@ namespace ClusterizerTests.SystemTests
             MemoryStream memory = new MemoryStream();
             TextWriter writer = new StreamWriter(memory);
             TextReader reader = new StreamReader(memory);
+            GenerateTestInputFiles(firstInputFile, secondInputFile, thirdInputFile);
 
             // act
             Console.SetOut(writer);
@@ -206,7 +231,7 @@ namespace ClusterizerTests.SystemTests
             Clusterizer.Program.Main(new string[] { "-db", outputFile, "3" });
             writer.Flush();
             memory.Position = 0;
-           
+
             // assert
             Assert.IsTrue(reader.ReadToEnd().Contains("Ошибка кластеризации"));
         }
@@ -251,6 +276,12 @@ namespace ClusterizerTests.SystemTests
                 f.WriteLine("#сущность");
                 f.WriteLine("-черный код. ");
             }
+        }
+
+        private string GetMethodName()
+        {
+            var st = new StackTrace(new StackFrame(2));
+            return st.GetFrame(0).GetMethod().Name;
         }
     }
 }
