@@ -12,6 +12,7 @@ namespace ClusterizerTests.SystemTests
     [TestClass]
     public class ID_SystemTests
     {
+        // test
         private string firstInputFile
         {
             get
@@ -33,6 +34,7 @@ namespace ClusterizerTests.SystemTests
                 return GetMethodName() + "_in3.txt";
             }
         }
+
         private string outputFile
         {
             get
