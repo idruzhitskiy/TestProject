@@ -53,7 +53,7 @@ namespace ClusterizerTests.RemoteDatabaseTests
             remoteDatabase.AddEntity(entity1);
             remoteDatabase.AddEntity(entity2);
             remoteDatabase.AddEntity(entity3);
-            var entitiesInDatabase = remoteDatabase.FindAllEntitites();
+            var entitiesInDatabase = remoteDatabase.Entities;
 
             // assert
             Assert.IsTrue(entitiesInDatabase.Select(e => e.Id).Contains(entity1.Id));
@@ -76,7 +76,7 @@ namespace ClusterizerTests.RemoteDatabaseTests
             remoteDatabase.AddEntity(entity2);
             remoteDatabase.AddEntity(entity3);
             remoteDatabase.DropDatabase();
-            var emptyEntitiesList = remoteDatabase.FindAllEntitites();
+            var emptyEntitiesList = remoteDatabase.Entities;
 
             // assert
             Assert.IsTrue(emptyEntitiesList.Count == 0);
