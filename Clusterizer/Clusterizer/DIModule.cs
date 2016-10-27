@@ -19,7 +19,7 @@ namespace Clusterizer
         {
             // Сюда добавлять реализации абстрактных классов, например
             // Bind<Interface>().To<Realisation>()
-            Bind<IDistanceFunction>().To<DistanceFunction>();
+            Bind<IDistanceFunction>().To<SynonimsDistanceFunction>();
             Bind<IEntitiesReader>().To<EntitiesReader>().InSingletonScope();
             Bind<IEntitiesFactory>().To<SimpleEntitiesFactory>();
             Bind<IClusterizer>().To<Clusterizers.Clusterizer>();
