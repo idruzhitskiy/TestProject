@@ -94,6 +94,8 @@ namespace Clusterizer.DistanceFunctions
                     entities
                     .Select(e => e.TextAttributes[i])
                     .SelectMany(l => l)
+                    .Select(s => wordsWithSynonyms[s])
+                    .Distinct()
                     .ToList());
             }
             return factory.CreateEntity(resultAttributes);

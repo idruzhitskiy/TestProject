@@ -76,9 +76,7 @@ namespace ClusterizerTests.FunctionalTests
 
             // assert 
             Assert.IsTrue(clusters[0].Contains(elements[0]));
-            Assert.IsTrue(clusters[1].Contains(elements[1])
-                            && clusters[1].Contains(elements[2])
-                            && clusters[1].Contains(elements[3]));
+            Assert.IsTrue(clusters[1].Contains(elements[3]));
 
         }
 
