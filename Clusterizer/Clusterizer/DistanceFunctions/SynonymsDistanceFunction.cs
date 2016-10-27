@@ -13,13 +13,13 @@ namespace Clusterizer.DistanceFunctions
     /// </summary>
     public class SynonymsDistanceFunction : IDistanceFunction
     {
-        private Dictionary<string,string> wordsWithSynonyms;
+        private Dictionary<string, string> wordsWithSynonyms;
         private List<string> uniqWords;
         private readonly IEntitiesFactory factory;
 
         public SynonymsDistanceFunction(IEntitiesReader reader, IEntitiesFactory factory)
         {
-            wordsWithSynonyms = new Dictionary<string,string>();
+            wordsWithSynonyms = new Dictionary<string, string>();
             uniqWords = new List<string>();
             foreach (var attrsList in reader.Entities.Select(e => e.TextAttributes))
             {
@@ -32,7 +32,7 @@ namespace Clusterizer.DistanceFunctions
                             var added = false;
                             foreach (var uniqWord in uniqWords)
                             {
-                                if (!added && Accord.Math.Distance.Levenshtein(word,uniqWord) <= Math.Floor(Math.Min(word.Count(), uniqWord.Count())*0.4))
+                                if (!added && Accord.Math.Distance.Levenshtein(word, uniqWord) <= Math.Floor(Math.Min(word.Count(), uniqWord.Count()) * 0.4))
                                 {
                                     wordsWithSynonyms.Add(word, uniqWord);
                                     added = true;
@@ -125,13 +125,13 @@ namespace Clusterizer.DistanceFunctions
         private List<double> FillWordCountVector(List<string> list)
         {
             Dictionary<string, double> result = new Dictionary<string, double>();
-            foreach(var word in uniqWords)
+            foreach (var word in uniqWords)
             {
                 result.Add(word, 0);
             }
             foreach (var word in list)
             {
-                 result[wordsWithSynonyms[word]]++;
+                result[wordsWithSynonyms[word]]++;
             }
             return result.Values.ToList();
         }

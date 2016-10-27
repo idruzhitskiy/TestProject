@@ -33,12 +33,60 @@ namespace ClusterizerTests.Version2Tests
             var distanceFunction = kernel.Get<IDistanceFunction>();
             var clusterizer = kernel.Get<IClusterizer>();
 
+            // acr
             var clusters = clusterizer.Clusterize(reader.Entities, 2);
 
+            // assert
             Assert.IsTrue(clusters.Find(l => l.Contains(entities[0])).Contains(entities[1]));
             Assert.IsTrue(clusters.Find(l => l.Contains(entities[0])).Contains(entities[2]));
             Assert.IsTrue(!clusters.Find(l => l.Contains(entities[0])).Contains(entities[3]));
+        }
 
+        [TestMethod]
+        public void TestAdvancedAccuracyLongAttributes()
+        {
+            // arrange
+            var entities = new List<IEntity>
+            {
+                CreateEntity(new[] {new[] { "кот","греется","на","солнышке"} }),
+                CreateEntity(new[] {new[] { "кот","похож", "на", "шарик"} }),
+                CreateEntity(new[] {new[] { "коты","похожи","на", "шарики"} })
+            };
+            InitializeSimpleFactory();
+            var reader = InitializeReader(entities);
+            var distanceFunction = kernel.Get<IDistanceFunction>();
+            var clusterizer = kernel.Get<IClusterizer>();
+
+            // acr
+            var clusters = clusterizer.Clusterize(reader.Entities, 2);
+
+            // assert
+            Assert.IsTrue(!clusters.Find(l => l.Contains(entities[0])).Contains(entities[1]));
+            Assert.IsTrue(!clusters.Find(l => l.Contains(entities[0])).Contains(entities[2]));
+        }
+
+        [TestMethod]
+        public void TestAdvancedAccuracyLookalikeWords()
+        {
+            // arrange
+            var entities = new List<IEntity>
+            {
+                CreateEntity(new[] {new[] { "солнце"} }),
+                CreateEntity(new[] {new[] { "солнышко"} }),
+                CreateEntity(new[] {new[] { "солнца"} })
+
+            };
+            InitializeSimpleFactory();
+            var reader = InitializeReader(entities);
+            var distanceFunction = kernel.Get<IDistanceFunction>();
+            var clusterizer = kernel.Get<IClusterizer>();
+
+            // acr
+            var clusters = clusterizer.Clusterize(reader.Entities, 2);
+
+            // assert
+            Assert.IsTrue(!clusters.Find(l => l.Contains(entities[0])).Contains(entities[1]));
+            Assert.IsTrue(clusters.Find(l => l.Contains(entities[0])).Contains(entities[2]));
         }
 
         private IEntity CreateEntity(IEnumerable<IEnumerable<string>> attrs)
