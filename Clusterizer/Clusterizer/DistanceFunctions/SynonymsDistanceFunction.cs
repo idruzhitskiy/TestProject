@@ -11,13 +11,13 @@ namespace Clusterizer.DistanceFunctions
     /// <summary>
     /// Реализация IDistanceFunction с использованием Евклидова расстояния
     /// </summary>
-    public class SynonimsDistanceFunction : IDistanceFunction
+    public class SynonymsDistanceFunction : IDistanceFunction
     {
         private Dictionary<string,string> wordsWithSynonyms;
         private List<string> uniqWords;
         private readonly IEntitiesFactory factory;
 
-        public SynonimsDistanceFunction(IEntitiesReader reader, IEntitiesFactory factory)
+        public SynonymsDistanceFunction(IEntitiesReader reader, IEntitiesFactory factory)
         {
             wordsWithSynonyms = new Dictionary<string,string>();
             uniqWords = new List<string>();
