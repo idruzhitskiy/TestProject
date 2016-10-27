@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clusterizers\Clusterizer.cs" />
+    <Compile Include="Clusterizers\ClusterizerCMeans.cs" />
     <Compile Include="DIModule.cs" />
     <Compile Include="EntitiesReaders\EntitiesReader.cs" />
     <Compile Include="EntitiesWriters\EntitiesWriter.cs" />
