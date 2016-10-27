@@ -75,6 +75,7 @@
     <Compile Include="EntitiesWriterTests\EntitiesWriterTests.cs" />
     <Compile Include="RemoteDatabaseTests\RemoteDatabeseTests.cs" />
     <Compile Include="SystemTests\ID_SystemTests.cs" />
+    <Compile Include="Version2Tests\Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
