@@ -64,6 +64,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AutomationTests\AutomationTests.cs" />
+    <Compile Include="AutomationTests\ClusterizerTestAttribute.cs" />
     <Compile Include="BaseTest.cs" />
     <Compile Include="DistanceFunctionTests\DistanceFunctionTests.cs" />
     <Compile Include="EntitiesReaderTests\EntitiesReaderTests.cs" />
